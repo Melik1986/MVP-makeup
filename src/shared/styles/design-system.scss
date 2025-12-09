@@ -1,0 +1,119 @@
+// Design System Variables
+// Based on .cursor/design-system.md
+// Using @forward to export all variables and mixins
+
+// Color Palette
+$color-primary-100: #fadbdd;
+$color-primary-500: #a81c26;
+$color-primary-700: #7a0f17;
+$color-primary-900: #2e0509;
+
+$color-secondary-500: #1b3f2b;
+$color-secondary-900: #0d2115;
+
+$color-neutral-white: #ffffff;
+$color-neutral-gray-50: #f9f9f9;
+$color-neutral-gray-200: #e5e5e5;
+$color-neutral-gray-800: #333333;
+$color-neutral-black: #000000;
+
+$color-semantic-highlight: #d4af37;
+$color-semantic-error: #e02020;
+$color-semantic-success: #28a745;
+
+$color-bg-hero-gradient-start: #1a0406;
+$color-bg-hero-gradient-end: #4a0e14;
+$color-bg-surface: #ffffff;
+$color-bg-card: transparent;
+
+// Gradients
+$gradient-button-primary: linear-gradient(180deg, #d65a61 0%, #9e1b23 100%);
+$gradient-button-shine: radial-gradient(
+  50% 100% at 50% 0%,
+  rgba(255, 255, 255, 0.4) 0%,
+  rgba(255, 255, 255, 0) 100%
+);
+$gradient-hero-overlay: radial-gradient(circle at center, #5e1319 0%, #1a0406 80%);
+
+// Typography
+$font-family-primary: 'Montserrat', Helvetica, Arial, sans-serif;
+$font-family-secondary: 'Playfair Display', serif;
+$font-family-script: 'Great Vibes', cursive;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 24px;
+$font-size-2xl: 36px;
+$font-size-3xl: 48px;
+$font-size-hero: 120px;
+
+$line-height-tight: 1.1;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.8;
+
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-black: 900;
+
+// Spacing Scale (base unit: 8px)
+$spacing-0: 0px;
+$spacing-1: 8px;
+$spacing-2: 16px;
+$spacing-3: 24px;
+$spacing-4: 32px;
+$spacing-6: 48px;
+$spacing-8: 64px;
+$spacing-12: 96px;
+$spacing-section: 120px;
+
+// Border Radius
+$border-radius-none: 0px;
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-button-glow:
+  0px 10px 20px rgba(166, 28, 38, 0.4),
+  inset 0px 2px 4px rgba(255, 255, 255, 0.3);
+$shadow-floating-object: 0px 20px 40px rgba(0, 0, 0, 0.15);
+$shadow-text-hero: 0px 4px 10px rgba(0, 0, 0, 0.3);
+
+// Layout
+$container-max-width: 1140px;
+$grid-columns: 12;
+$grid-gutter: 24px;
+
+// Transitions
+$transition-default: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// Mixins для медиа-запросов
+@mixin mobile {
+  @media (max-width: $breakpoint-md - 1px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}

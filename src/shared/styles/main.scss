@@ -1,0 +1,12 @@
+@use './reset.scss';
+@use './design-system.scss' as *;
+
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $color-neutral-gray-800;
+  background-color: $color-bg-surface;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

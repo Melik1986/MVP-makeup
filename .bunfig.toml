@@ -1,0 +1,15 @@
+# Bun configuration file
+# https://bun.sh/docs/cli/bunfig
+
+[install]
+# Auto-install peer dependencies
+peer = true
+
+# Don't install optional dependencies by default
+optional = false
+
+# Use lockfile
+frozen-lockfile = false
+
+# Production install only
+production = false
