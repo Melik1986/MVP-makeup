@@ -8,13 +8,13 @@
       <div class="hero__content">
         <!-- Info tags -->
         <div class="hero__tags">
-          <div ref="startDateRef" class="hero__tag hero__tag--start">
+          <div class="hero__tag hero__tag--start">
             <div class="hero__tag-content">
               <Text variant="subtitle">Старт обучения</Text>
               <Text variant="body" tag="div" class="hero__tag-value">14 МАРТА</Text>
             </div>
           </div>
-          <div ref="formatRef" class="hero__tag hero__tag--format">
+          <div class="hero__tag hero__tag--format">
             <div class="hero__tag-content">
               <Text variant="subtitle">Формат курса</Text>
               <Text variant="body" tag="div" class="hero__tag-value">ONLINE</Text>
@@ -24,51 +24,48 @@
 
         <!-- Main headline -->
         <div class="hero__headline">
-          <div ref="headlineTopRef" class="hero__headline-top">
+          <div class="hero__headline-top">
             <div class="hero__headline-top-wrapper">
               <Text variant="subtitle">НАУЧИСЬ ВОСТРЕБОВАННОЙ ПРОФЕССИИ</Text>
             </div>
           </div>
 
           <div class="hero__title-block">
-            <div ref="titleLeftRef" class="hero__title-left">
+            <div class="hero__title-left">
               <div class="hero__duration-wrapper">
                 <Text variant="body" tag="div" class="hero__duration">за два месяца</Text>
               </div>
               <div class="hero__mentorship">
-                <div ref="mentorshipRef" class="hero__mentorship-wrapper">
+                <div class="hero__mentorship-wrapper">
                   <Text variant="small">Легендарное закрытое наставничество от</Text>
-                  <div ref="signatureRef" class="hero__signature">Ольга Павилина</div>
+                  <div class="hero__signature">Ольга Павилина</div>
                 </div>
               </div>
             </div>
 
             <div class="hero__title-center">
-              <div ref="modelRef" class="hero__model">
+              <div class="hero__model">
                 <div class="hero__model-container">
                   <img
-                    ref="modelBackRef"
                     src="/model-behin.png"
                     alt="Модель сзади"
-                    class="hero__model-image"
+                    class="hero__model-image hero__model-back"
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
                   />
                   <img
-                    ref="modelSideRef"
                     src="/model-from.png"
                     alt="Модель сбоку"
-                    class="hero__model-image"
+                    class="hero__model-image hero__model-side"
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
                   />
                   <img
-                    ref="modelFrontRef"
                     src="/model-front.png"
                     alt="Модель спереди"
-                    class="hero__model-image"
+                    class="hero__model-image hero__model-front"
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
@@ -76,42 +73,42 @@
                 </div>
               </div>
 
-              <div ref="titleTextRef" class="hero__title-text">
+              <div class="hero__title-text">
                 <div class="hero__title-row">
-                  <div ref="charVRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--v">
                     <span>В</span>
                   </div>
-                  <div ref="charIRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--i">
                     <span>И</span>
                   </div>
-                  <div ref="charZRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--z">
                     <span>З</span>
                   </div>
-                  <div ref="charARef1" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--a1">
                     <span>А</span>
                   </div>
-                  <div ref="charZhRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--zh">
                     <span>Ж</span>
                   </div>
-                  <div ref="charIRef2" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--i2">
                     <span>И</span>
                   </div>
-                  <div ref="charSRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--s">
                     <span>С</span>
                   </div>
-                  <div ref="charTRef" class="hero__title-char-container">
+                  <div class="hero__title-char-container hero__char--t">
                     <span>Т</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div ref="titleRightRef" class="hero__title-right">
+            <div class="hero__title-right">
               <div class="hero__level-wrapper">
                 <Text variant="body" tag="div" class="hero__level">с нуля до профи</Text>
               </div>
               <div class="hero__earnings">
-                <div ref="earningsRef" class="hero__earnings-wrapper">
+                <div class="hero__earnings-wrapper">
                   <Text variant="small"
                     >Зарабатывай от 50000 руб уже через 2 месяца работая в своем удобном
                     графике</Text
@@ -123,7 +120,7 @@
         </div>
 
         <!-- CTA Button -->
-        <div ref="ctaRef" class="hero__cta">
+        <div class="hero__cta">
           <Button variant="primary" size="lg" @click="handleBookingClick">
             ЗАБРОНИРОВАТЬ МЕСТО
           </Button>
@@ -145,62 +142,16 @@ import { useHeroAnimation } from './composables/useHeroAnimation'
 const emit = defineEmits(['booking-click'])
 
 const heroRef = ref(null)
-const startDateRef = ref(null)
-const formatRef = ref(null)
-const headlineTopRef = ref(null)
-const titleLeftRef = ref(null)
-const titleRightRef = ref(null)
-const mentorshipRef = ref(null)
-const earningsRef = ref(null)
-const signatureRef = ref(null)
-const modelRef = ref(null)
-const modelBackRef = ref(null)
-const modelSideRef = ref(null)
-const modelFrontRef = ref(null)
-const titleTextRef = ref(null)
-const ctaRef = ref(null)
-const charVRef = ref(null)
-const charIRef = ref(null)
-const charZRef = ref(null)
-const charARef1 = ref(null)
-const charZhRef = ref(null)
-const charIRef2 = ref(null)
-const charSRef = ref(null)
-const charTRef = ref(null)
 
 const handleBookingClick = () => {
   emit('booking-click')
 }
 
+const { initAnimation } = useHeroAnimation(heroRef)
+
 onMounted(async () => {
   await nextTick()
-  useHeroAnimation({
-    heroRef,
-    startDateRef,
-    formatRef,
-    headlineTopRef,
-    titleLeftRef,
-    titleRightRef,
-    mentorshipRef,
-    earningsRef,
-    signatureRef,
-    modelRef,
-    modelBackRef,
-    modelSideRef,
-    modelFrontRef,
-    titleTextRef,
-    ctaRef,
-    chars: {
-      charVRef,
-      charIRef,
-      charZRef,
-      charARef1,
-      charZhRef,
-      charIRef2,
-      charSRef,
-      charTRef
-    }
-  })
+  initAnimation()
 })
 </script>
 
