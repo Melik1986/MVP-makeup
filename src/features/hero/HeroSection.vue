@@ -37,7 +37,10 @@
               </div>
               <div class="hero__mentorship">
                 <div class="hero__mentorship-wrapper">
-                  <Text variant="small">Легендарное закрытое наставничество от</Text>
+                  <TextReveal
+                    text="Легендарное закрытое наставничество от"
+                    word-class="hero__text-small"
+                  />
                   <div class="hero__signature">Ольга Павилина</div>
                 </div>
               </div>
@@ -109,10 +112,10 @@
               </div>
               <div class="hero__earnings">
                 <div class="hero__earnings-wrapper">
-                  <Text variant="small"
-                    >Зарабатывай от 50000 руб уже через 2 месяца работая в своем удобном
-                    графике</Text
-                  >
+                  <TextReveal
+                    text="Зарабатывай от 50000 руб уже через 2 месяца работая в своем удобном графике"
+                    word-class="hero__text-small"
+                  />
                 </div>
               </div>
             </div>
@@ -136,6 +139,7 @@ import { nextTick, onMounted, ref } from 'vue'
 import Button from '@shared/ui/Button.vue'
 import Container from '@shared/ui/Container.vue'
 import Text from '@shared/ui/Text.vue'
+import TextReveal from '@shared/ui/animation/TextReveal.vue'
 
 import { useHeroAnimation } from './composables/useHeroAnimation'
 
@@ -398,7 +402,7 @@ onMounted(async () => {
 .hero__title-right {
   display: flex;
   flex-direction: column;
-  gap: $spacing-3;
+  gap: 8.75rem;
   text-align: center;
 
   @media (max-width: $breakpoint-lg) {
@@ -445,5 +449,11 @@ onMounted(async () => {
 .hero__cta {
   margin-top: $spacing-8;
   z-index: 3;
+}
+
+.hero__text-small {
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+  color: $color-neutral-white;
 }
 </style>
