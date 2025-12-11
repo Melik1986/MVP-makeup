@@ -1,13 +1,7 @@
 <template>
   <div class="text-reveal">
-    <div 
-      v-for="(word, index) in words" 
-      :key="index" 
-      class="text-reveal__mask"
-    >
-      <span class="text-reveal__word" :class="wordClass">
-        {{ word }}&nbsp;
-      </span>
+    <div v-for="(word, index) in words" :key="index" class="text-reveal__mask">
+      <span class="text-reveal__word" :class="wordClass"> {{ word }}&nbsp; </span>
     </div>
   </div>
 </template>
@@ -26,16 +20,14 @@ const props = defineProps({
   }
 })
 
-const words = computed(() => {
-  return props.text ? props.text.split(' ') : []
-})
+const words = computed(() => (props.text ? props.text.split(' ') : []))
 </script>
 
 <style scoped lang="scss">
 .text-reveal {
   display: flex;
   flex-wrap: wrap;
-  
+
   &__mask {
     overflow: hidden;
     padding-bottom: 0.1em;

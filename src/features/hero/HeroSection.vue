@@ -41,7 +41,7 @@
                     text="Легендарное закрытое наставничество от"
                     word-class="hero__text-small"
                   />
-                  <div class="hero__signature">Ольга Павилина</div>
+                  <div class="hero__signature" v-html="signatureSvg"></div>
                 </div>
               </div>
             </div>
@@ -136,10 +136,11 @@
 <script setup>
 import { nextTick, onMounted, ref } from 'vue'
 
+import signatureSvg from '@shared/assets/icons/Olga_Pavilina.svg?raw'
+import TextReveal from '@shared/ui/animation/TextReveal.vue'
 import Button from '@shared/ui/Button.vue'
 import Container from '@shared/ui/Container.vue'
 import Text from '@shared/ui/Text.vue'
-import TextReveal from '@shared/ui/animation/TextReveal.vue'
 
 import { useHeroAnimation } from './composables/useHeroAnimation'
 
@@ -438,12 +439,24 @@ onMounted(async () => {
 }
 
 .hero__signature {
-  font-family: $font-family-script;
-  font-size: $font-size-2xl;
-  color: $color-neutral-white;
-  opacity: 0.8;
-  transform: rotate(-15deg);
   margin-top: $spacing-2;
+  transform: rotate(-5deg);
+  width: 200px; /* Adjust based on SVG aspect ratio */
+  height: auto;
+
+  :deep(svg) {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  :deep(path) {
+    fill: transparent;
+    stroke: $color-neutral-white;
+    stroke-width: 0.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 }
 
 .hero__cta {
