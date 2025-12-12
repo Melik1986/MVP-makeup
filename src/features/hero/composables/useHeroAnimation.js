@@ -13,8 +13,7 @@ export function useHeroAnimation(containerRef) {
 
     // Динамически импортируем плагины для SSR совместимости
     const { CustomEase } = await import('gsap/CustomEase')
-    const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-    gsap.registerPlugin(CustomEase, ScrollTrigger)
+    gsap.registerPlugin(CustomEase)
 
     // CodeGrid "Hop" Ease
     const cgEase = CustomEase.create('cg-ease', 'M0,0 C0.083,0.294 0.117,0.767 0.413,0.908 0.627,1.009 0.813,1.006 1,1')
@@ -359,19 +358,6 @@ export function useHeroAnimation(containerRef) {
           'cta'
         )
       }
-
-      // ScrollTrigger logic
-      ScrollTrigger.create({
-        trigger: containerRef.value,
-        start: 'top top',
-        end: () => `+=${window.innerHeight}`,
-        scrub: 0.5,
-        onUpdate: self => {
-          const scrollProgress = self.progress
-          const timelineProgress = 1 - scrollProgress
-          timeline.progress(timelineProgress)
-        }
-      })
     }, containerRef.value)
   }
 
