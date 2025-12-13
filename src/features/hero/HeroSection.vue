@@ -328,6 +328,7 @@ onMounted(async () => {
   height: auto;
   object-fit: contain;
   visibility: hidden;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.18)) drop-shadow(0 18px 36px rgba(0, 0, 0, 0.16));
 }
 
 .hero__title-text {
@@ -342,6 +343,13 @@ onMounted(async () => {
 .hero__title-row {
   display: inline-flex;
   gap: 0;
+  line-height: 24px;
+  font-size: 120px;
+  font-weight: 600;
+  color: rgba(51, 51, 51, 1);
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  font-family: Helvetica;
 }
 
 .hero__title-char-container {
