@@ -16,8 +16,11 @@ export function useHeroAnimation(containerRef) {
     gsap.registerPlugin(CustomEase)
 
     // CodeGrid "Hop" Ease
-    const cgEase = CustomEase.create('cg-ease', 'M0,0 C0.083,0.294 0.117,0.767 0.413,0.908 0.627,1.009 0.813,1.006 1,1')
-    
+    const cgEase = CustomEase.create(
+      'cg-ease',
+      'M0,0 C0.083,0.294 0.117,0.767 0.413,0.908 0.627,1.009 0.813,1.006 1,1'
+    )
+
     ctx = gsap.context(self => {
       // Селекторы
       const startDateContent = self.selector('.hero__tag--start .hero__tag-content')
