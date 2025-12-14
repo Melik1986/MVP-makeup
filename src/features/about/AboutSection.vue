@@ -20,13 +20,19 @@
             </Text>
             <ul class="about__list">
               <li class="about__list-item">
-                <Text variant="body">10 лет опыта в индустрии красоты</Text>
+                <Text variant="body" class="about__list-item-text"
+                  >10 лет опыта в индустрии красоты</Text
+                >
               </li>
               <li class="about__list-item">
-                <Text variant="body">Основатель студии премиум-класса</Text>
+                <Text variant="body" class="about__list-item-text"
+                  >Основатель студии премиум-класса</Text
+                >
               </li>
               <li class="about__list-item">
-                <Text variant="body">Более 5000 довольных клиентов</Text>
+                <Text variant="body" class="about__list-item-text"
+                  >Более 5000 довольных клиентов</Text
+                >
               </li>
             </ul>
           </div>

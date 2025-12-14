@@ -54,24 +54,44 @@
   overflow: hidden; // For SplitText
 }
 
+.about__description {
+  font-family: $font-family-primary;
+  font-size: clamp(1rem, 2vw, 1.25rem); // Adaptive font size
+  line-height: 1.6;
+  color: $color-neutral-gray-800;
+
+  // Override Text component styles globally for this section
+  .text--body {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+}
+
+.about__paragraph {
+  // Already inheriting via .text--body override above, but ensure clamp works
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
+
 .about__list {
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
   margin-top: $spacing-4;
+  padding-left: 0;
+  list-style: none;
 }
 
 .about__list-item {
   display: flex;
   align-items: center;
+  font-family: $font-family-primary;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
 
-  &::before {
-    content: '';
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: $color-primary-500;
-    margin-right: $spacing-3;
+  .about__list-item-text {
+    font-size: inherit;
+    margin: 0;
+    line-height: inherit;
+    color: inherit;
   }
 }
