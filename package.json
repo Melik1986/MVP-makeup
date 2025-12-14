@@ -8,31 +8,43 @@
     "preview": "vite preview",
     "lint": "bunx eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "bunx prettier --write \"**/*.{js,jsx,ts,tsx,vue,json,css,scss,md}\"",
-    "type-check": "bunx vue-tsc --noEmit"
+    "type-check": "bunx vue-tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "bun run lint",
+      "bun run format"
+    ],
+    "*.{css,scss,md,json}": [
+      "bun run format"
+    ]
   },
   "dependencies": {
-    "@vueuse/core": "^10.7.0",
-    "gsap": "^3.12.0",
-    "vue": "^3.4.0"
+    "@vueuse/core": "^10.11.1",
+    "gsap": "^3.14.2",
+    "vue": "^3.5.25"
   },
   "devDependencies": {
-    "@types/node": "^24.10.2",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "@vitejs/plugin-vue": "^5.0.0",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "@vitejs/plugin-vue": "^5.2.4",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.1",
     "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-vue": "^9.19.2",
-    "prettier": "^3.1.1",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-vue": "^9.33.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "sass": "^1.95.0",
-    "typescript": "^5.6.0",
-    "vite": "^5.0.0",
-    "vue-tsc": "^1.8.25"
+    "sass": "^1.96.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vue-tsc": "^3.1.8"
   }
 }

@@ -1,7 +1,10 @@
 <template>
   <div class="landing-page">
     <Header />
-    <HeroSection @booking-click="openBookingModal" />
+    <div class="hero-transition-wrapper">
+      <HeroSection @booking-click="openBookingModal" />
+      <AboutSection />
+    </div>
     <Divider />
     <AudienceSection @yes-click="openBookingModal" @booking-click="openBookingModal" />
     <BookingForm />
@@ -19,6 +22,7 @@
 <script setup>
 import { ref } from 'vue'
 
+import AboutSection from '@features/about/AboutSection.vue'
 import AudienceSection from '@features/audience/AudienceSection.vue'
 import BookingForm from '@features/booking/BookingForm.vue'
 import HeroSection from '@features/hero/HeroSection.vue'
@@ -40,11 +44,5 @@ const closeBookingModal = () => {
 </script>
 
 <style scoped lang="scss">
-.landing-page {
-  min-height: 100vh;
-}
-
-.booking-modal {
-  padding: $spacing-4 0;
-}
+// Styles moved to src/shared/styles/pages/_landing.scss
 </style>

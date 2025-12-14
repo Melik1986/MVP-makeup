@@ -1,0 +1,14 @@
+@use '../design-system.scss' as *;
+
+.landing-page {
+  min-height: 100vh;
+}
+
+.hero-transition-wrapper {
+  position: relative;
+  // We don't set height here, GSAP will handle pinning
+}
+
+.booking-modal {
+  padding: $spacing-4 0;
+}

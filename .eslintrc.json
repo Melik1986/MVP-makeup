@@ -156,6 +156,7 @@
     "build",
     "public",
     "*.config.js",
-    "*.config.ts"
+    "*.config.ts",
+    "src/shared/libs/gsap/**"
   ]
 }

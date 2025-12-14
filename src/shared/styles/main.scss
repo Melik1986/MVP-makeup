@@ -1,5 +1,12 @@
 @use './reset.scss';
-@use './design-system.scss' as *;
+// design-system is injected globally via vite.config.js
+
+// Features
+@use 'features/hero';
+@use 'features/about';
+
+// Pages
+@use 'pages/landing';
 
 body {
   font-family: $font-family-primary;

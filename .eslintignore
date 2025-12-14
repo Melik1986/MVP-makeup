@@ -6,3 +6,4 @@ public
 *.config.js
 *.config.ts
 *.min.js
+src/shared/libs/gsap/**

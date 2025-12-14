@@ -1,6 +1,10 @@
 import { gsap } from 'gsap'
 import { onUnmounted } from 'vue'
 
+import { ScrollTrigger } from '@shared/libs/gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 const fourtyFrames = 1.3333333
 const fiftyFrames = 3.0 // Increased to 3.0s for maximum smoothness and sync with model
 
@@ -12,7 +16,7 @@ export function useHeroAnimation(containerRef) {
     if (typeof window === 'undefined' || !containerRef.value) return
 
     // Динамически импортируем плагины для SSR совместимости
-    const { CustomEase } = await import('gsap/CustomEase')
+    const { CustomEase } = await import('@shared/libs/gsap/CustomEase')
     gsap.registerPlugin(CustomEase)
 
     // CodeGrid "Hop" Ease
@@ -31,7 +35,7 @@ export function useHeroAnimation(containerRef) {
 
       // TextReveal Words
       const mentorshipWords = self.selector('.hero__mentorship-wrapper .text-reveal__word')
-      const signature = self.selector('.hero__signature') // Added signature
+      const signature = self.selector('.hero__signature')
       const earningsWords = self.selector('.hero__earnings-wrapper .text-reveal__word')
 
       const modelBack = self.selector('.hero__model-back')
@@ -48,6 +52,7 @@ export function useHeroAnimation(containerRef) {
       const charI2 = self.selector('.hero__char--i2 span')
       const charS = self.selector('.hero__char--s span')
       const charT = self.selector('.hero__char--t span')
+      const titleRow = self.selector('.hero__title-row')
 
       // --- Установка начального состояния (gsap.set) ---
 
@@ -67,6 +72,9 @@ export function useHeroAnimation(containerRef) {
       if (charI2) gsap.set(charI2, { x: '-2rem', autoAlpha: 0 })
       if (charS) gsap.set(charS, { x: '4.3rem', autoAlpha: 0 })
       if (charT) gsap.set(charT, { x: '1.9rem', autoAlpha: 0 })
+      // Hide the subtitle text above the headline
+      const subtitle = self.selector('.hero__headline-top-wrapper .text--subtitle')
+      if (subtitle) gsap.set(subtitle, { autoAlpha: 1 }) // Initially visible or handled by headline wrapper
 
       // 4. Short Text (Left/Right) -> Fly In from Side (-50px / 50px)
       if (titleLeftWrapper) gsap.set(titleLeftWrapper, { x: -50, autoAlpha: 0 })
@@ -359,6 +367,169 @@ export function useHeroAnimation(containerRef) {
             ease: 'elastic.out(1, 0.5)'
           },
           'cta'
+        )
+      }
+
+      // === Scroll Transition (Typography Gateway) ===
+      // Find the wrapper (parent of hero)
+      const transitionWrapper =
+        self.selector('.hero-transition-wrapper')[0] ||
+        containerRef.value.closest('.hero-transition-wrapper')
+      const aboutSection = document.querySelector('.about') // Need to find global About section
+
+      if (transitionWrapper && aboutSection) {
+        // Set initial state for transition
+        // Ensure About is visible but behind
+        gsap.set(aboutSection, {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 1,
+          visibility: 'visible'
+        })
+        gsap.set(containerRef.value, {
+          position: 'relative',
+          zIndex: 2,
+          backgroundColor: 'transparent' // Ensure hero background doesn't block
+        })
+
+        const scrollTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: transitionWrapper,
+            start: 'top top',
+            end: '+=2000', // Adjust for speed
+            pin: true,
+            scrub: 1
+            // markers: true // For debugging
+          }
+        })
+
+        // 1. Zoom Text (Gap between A and Zh)
+        if (titleRow) {
+          scrollTl.to(titleRow, {
+            scale: 300, // Even bigger scale to ensure we go "through"
+            // V I Z A | Zh I S T. Yes, center is still roughly between A and Zh.
+            // Keeping 53% 55% or reverting to 50% 55% depending on visual check.
+            // Let's stick to the calibrated 50% 55% from previous turn as it seemed generic enough.
+            transformOrigin: '50% 55%',
+            ease: 'power2.inOut',
+            duration: 1
+          })
+        }
+
+        // 2. Fade out other elements to clear the view
+        const elementsToFade = [
+          self.selector('.hero__background'),
+          self.selector('.hero__model'),
+          self.selector('.hero__tags'),
+          self.selector('.hero__cta'),
+          self.selector('.hero__title-left'),
+          self.selector('.hero__title-right'),
+          self.selector('.hero__headline-top-wrapper .text--subtitle') // Added subtitle to fade out
+        ]
+
+        scrollTl.to(
+          elementsToFade,
+          {
+            autoAlpha: 0,
+            duration: 0.3
+          },
+          0
+        )
+
+        // === About Section Integration ===
+        // Instead of About handling its own trigger, we can trigger it here or sync it.
+        // Or simpler: Let About section just have a normal ScrollTrigger but ensure start point is correct.
+        // Since Hero is pinned for 2000px, About is technically "underneath" or "waiting".
+
+        // Option A: Fire About animation when zoom is almost done.
+        if (aboutSection) {
+          // Find the About component instance or elements if possible, or dispatch event
+          // Better: use a class to trigger CSS or separate GSAP animation
+
+          // Let's manually trigger the entry animation for About elements here to ensure perfect sync
+          const aboutTitle = aboutSection.querySelector('.about__title')
+          const aboutImage = aboutSection.querySelector('.about__image')
+          const aboutParagraphs = aboutSection.querySelectorAll('.about__paragraph')
+          const aboutListItems = aboutSection.querySelectorAll('.about__list-item')
+
+          if (aboutTitle || aboutImage) {
+            // Initial states (ensure they are hidden if not already)
+            // Note: AboutSection.vue sets them up on mount, but we might race.
+            // It's safer if AboutSection waits for a signal or we control it here.
+
+            // Let's add to scrollTl!
+            // Start showing About content as we zoom in (e.g. at 0.7 progress)
+
+            // Image
+            if (aboutImage) {
+              scrollTl.fromTo(
+                aboutImage,
+                { autoAlpha: 0, y: 50 },
+                { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+                0.6 // Start at 60% of scroll
+              )
+            }
+
+            // Title chars (we can't easily access SplitText instance here unless we re-split or access DOM)
+            // Assuming SplitText ran in AboutSection and split chars are there.
+            // We can try to select chars if they exist
+            const aboutChars = aboutSection.querySelectorAll('.about__title div div') // SplitText usually wraps in divs
+            if (aboutChars.length > 0) {
+              scrollTl.fromTo(
+                aboutChars,
+                { autoAlpha: 0, y: 50 },
+                { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.7)' },
+                0.7
+              )
+            } else if (aboutTitle) {
+              // Fallback if split didn't happen yet or diff structure
+              scrollTl.fromTo(
+                aboutTitle,
+                { autoAlpha: 0, y: 30 },
+                { autoAlpha: 1, y: 0, duration: 0.5 },
+                0.7
+              )
+            }
+
+            // Paragraphs
+            if (aboutParagraphs.length > 0) {
+              scrollTl.fromTo(
+                aboutParagraphs,
+                { autoAlpha: 0, y: 20 },
+                { autoAlpha: 1, y: 0, stagger: 0.1, duration: 0.5 },
+                0.8
+              )
+            }
+            // List Items
+            if (aboutListItems.length > 0) {
+              scrollTl.fromTo(
+                aboutListItems,
+                { autoAlpha: 0, x: -20 },
+                { autoAlpha: 1, x: 0, stagger: 0.1, duration: 0.5 },
+                0.9
+              )
+            }
+          }
+        }
+
+        // 3. Ensure Hero container itself fades out at the end so it doesn't block pointer events
+        // AND IMPORTANTLY: Set display: none to completely remove it from flow/interaction
+        scrollTl.to(
+          containerRef.value,
+          {
+            autoAlpha: 0,
+            duration: 0.1,
+            ease: 'none',
+            onComplete: () => {
+              gsap.set(containerRef.value, { display: 'none' })
+            },
+            onReverseComplete: () => {
+              gsap.set(containerRef.value, { display: 'flex' }) // Restore if scrolling back up
+            }
+          },
+          0.9
         )
       }
     }, containerRef.value)
