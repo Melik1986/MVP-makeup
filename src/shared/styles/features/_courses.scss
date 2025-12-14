@@ -1,0 +1,48 @@
+@use '../design-system.scss' as *;
+
+.courses {
+  padding: $spacing-section 0;
+  background-color: $color-neutral-white;
+  position: relative;
+}
+
+.courses__title {
+  margin-bottom: $spacing-8;
+}
+
+.courses__gallery-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.courses__gallery {
+  display: flex;
+  gap: $spacing-8;
+  width: max-content; /* Ensure it takes full width of children */
+}
+
+.courses__card {
+  width: 80vw; /* Not full width to see next card peek */
+  max-width: 600px;
+  height: 60vh;
+  background-color: $color-neutral-gray-50;
+  padding: $spacing-8;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 4px;
+
+  &--dark {
+    background-color: $color-neutral-gray-800;
+    color: $color-neutral-white;
+
+    .courses__card-title,
+    .text--body {
+      color: $color-neutral-white;
+    }
+  }
+}
+
+.courses__card-title {
+  margin-bottom: $spacing-4;
+}

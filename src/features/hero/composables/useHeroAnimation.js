@@ -449,66 +449,33 @@ export function useHeroAnimation(containerRef) {
           // Better: use a class to trigger CSS or separate GSAP animation
 
           // Let's manually trigger the entry animation for About elements here to ensure perfect sync
-          const aboutTitle = aboutSection.querySelector('.about__title')
           const aboutImage = aboutSection.querySelector('.about__image')
-          const aboutParagraphs = aboutSection.querySelectorAll('.about__paragraph')
-          const aboutListItems = aboutSection.querySelectorAll('.about__list-item')
+          const aboutLines = aboutSection.querySelectorAll('.line-inner')
 
-          if (aboutTitle || aboutImage) {
-            // Initial states (ensure they are hidden if not already)
-            // Note: AboutSection.vue sets them up on mount, but we might race.
-            // It's safer if AboutSection waits for a signal or we control it here.
-
-            // Let's add to scrollTl!
-            // Start showing About content as we zoom in (e.g. at 0.7 progress)
-
+          if (aboutImage || aboutLines.length > 0) {
             // Image
             if (aboutImage) {
               scrollTl.fromTo(
                 aboutImage,
                 { autoAlpha: 0, y: 50 },
-                { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+                { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' },
                 0.6 // Start at 60% of scroll
               )
             }
 
-            // Title chars (we can't easily access SplitText instance here unless we re-split or access DOM)
-            // Assuming SplitText ran in AboutSection and split chars are there.
-            // We can try to select chars if they exist
-            const aboutChars = aboutSection.querySelectorAll('.about__title div div') // SplitText usually wraps in divs
-            if (aboutChars.length > 0) {
+            // Lines (Title, Paragraphs, List Items) - Fashion Reveal
+            if (aboutLines.length > 0) {
+              // Ensure initial state is tracked by GSAP
               scrollTl.fromTo(
-                aboutChars,
-                { autoAlpha: 0, y: 50 },
-                { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.7)' },
+                aboutLines,
+                { y: '100%' },
+                {
+                  y: '0%',
+                  stagger: 0.05,
+                  duration: 1.0,
+                  ease: 'power3.out'
+                },
                 0.7
-              )
-            } else if (aboutTitle) {
-              // Fallback if split didn't happen yet or diff structure
-              scrollTl.fromTo(
-                aboutTitle,
-                { autoAlpha: 0, y: 30 },
-                { autoAlpha: 1, y: 0, duration: 0.5 },
-                0.7
-              )
-            }
-
-            // Paragraphs
-            if (aboutParagraphs.length > 0) {
-              scrollTl.fromTo(
-                aboutParagraphs,
-                { autoAlpha: 0, y: 20 },
-                { autoAlpha: 1, y: 0, stagger: 0.1, duration: 0.5 },
-                0.8
-              )
-            }
-            // List Items
-            if (aboutListItems.length > 0) {
-              scrollTl.fromTo(
-                aboutListItems,
-                { autoAlpha: 0, x: -20 },
-                { autoAlpha: 1, x: 0, stagger: 0.1, duration: 0.5 },
-                0.9
               )
             }
           }

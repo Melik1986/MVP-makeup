@@ -69,30 +69,41 @@ onMounted(async () => {
   const listItems = aboutRef.value.querySelectorAll('.about__list-item')
   const image = aboutRef.value.querySelector('.about__image')
 
-  // 1. Image Fade In + Up
+  // 1. Image Fade In + Up (Setup)
   if (image) {
     gsap.set(image, { opacity: 0, y: 50 })
   }
 
-  // 2. Title SplitText Stagger
-  if (title) {
-    const split = new SplitText(title, { type: 'chars, lines' })
-    // Initial state
-    gsap.set(split.chars, { opacity: 0, y: 50 })
+  // Helper for Fashion Reveal (Masked Lines)
+  const setupReveal = (elements: Element | Element[] | NodeListOf<Element>) => {
+    if (!elements) return
+    const split = new SplitText(elements, { type: 'lines', linesClass: 'line-mask' })
+    split.lines.forEach(line => {
+      const content = line.innerHTML
+      line.innerHTML = `<div class="line-inner" style="display: block; transform: translate(0, 100%); will-change: transform;">${content}</div>`
+      line.style.overflow = 'hidden'
+    })
+    return split
   }
 
-  // 3. Paragraphs Reveal with SplitText
-  if (paragraphs.length) {
-    // const splitParagraphs = new SplitText(paragraphs, { type: 'lines' }) // SplitText might be too heavy/complex to sync blindly.
-    // Let's stick to simple element animation for sync safety or ensure split happens.
-    // Actually, splitting is fine, but we need to ensure useHeroAnimation finds the split elements.
-    // For simplicity and robustness in this "portal" transition, let's just hide the paragraphs themselves.
-    gsap.set(paragraphs, { opacity: 0, y: 20 })
-  }
+  // 2. Setup Title
+  if (title) setupReveal(title)
 
-  // 4. List Items Reveal with SplitText
+  // 3. Setup Paragraphs
+  if (paragraphs.length) setupReveal(paragraphs)
+
+  // 4. Setup List Items (Treat as lines)
   if (listItems.length) {
-    gsap.set(listItems, { opacity: 0, x: -20 })
+    // List items are already "lines", just wrap content
+    listItems.forEach(item => {
+      const text = item.querySelector('.about__list-item-text')
+      if (text) {
+        const content = text.innerHTML
+        text.innerHTML = `<div class="line-inner" style="display: block; transform: translate(0, 100%); will-change: transform;">${content}</div>`
+        ;(text as HTMLElement).style.overflow = 'hidden'
+        ;(text as HTMLElement).style.display = 'block'
+      }
+    })
   }
 })
 
