@@ -4,7 +4,13 @@
 // Features
 @use 'features/hero';
 @use 'features/about';
+@use 'features/audience';
+@use 'features/booking';
 @use 'features/courses';
+@use 'features/reviews';
+
+// Entities
+@use 'entities/audience-card';
 
 // Pages
 @use 'pages/landing';

@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 
 import Container from '@shared/ui/Container.vue'
 import Heading from '@shared/ui/Heading.vue'
@@ -38,8 +38,26 @@ import Text from '@shared/ui/Text.vue'
 import { useCoursesAnimation } from './composables/useCoursesAnimation'
 
 const coursesRef = ref(null)
+const coordinator = inject('scrollCoordinator', null)
 
-useCoursesAnimation(coursesRef)
+// useCoursesAnimation вернет ref с ScrollTrigger для регистрации в координаторе
+const scrollTriggerRef = useCoursesAnimation(coursesRef, coordinator)
+
+// Регистрируем courses ScrollTrigger в координаторе после монтирования
+onMounted(() => {
+  // Используем watch чтобы дождаться когда ScrollTrigger будет создан
+  watch(
+    scrollTriggerRef,
+    scrollTrigger => {
+      if (scrollTrigger && coordinator) {
+        coordinator.registerCoursesTrigger(scrollTrigger)
+        // Синхронизируем после регистрации courses
+        coordinator.synchronize()
+      }
+    },
+    { immediate: true }
+  )
+})
 </script>
 
 <style scoped lang="scss">

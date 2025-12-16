@@ -1,17 +1,19 @@
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { onUnmounted } from 'vue'
 
-import { ScrollTrigger } from '@shared/libs/gsap/ScrollTrigger'
+import { SplitText } from '@shared/libs/gsap/SplitText'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const fourtyFrames = 1.3333333
 const fiftyFrames = 3.0 // Increased to 3.0s for maximum smoothness and sync with model
 
-export function useHeroAnimation(containerRef) {
+export function useHeroAnimation(containerRef, coordinator = null) {
   let ctx
 
   const initAnimation = async () => {
+    let heroTimeline = null
     // eslint-disable-next-line no-restricted-globals
     if (typeof window === 'undefined' || !containerRef.value) return
 
@@ -26,6 +28,13 @@ export function useHeroAnimation(containerRef) {
     )
 
     ctx = gsap.context(self => {
+      // Helper для валидации элементов
+      const isValidElement = el => {
+        if (!el) return false
+        if (Array.isArray(el) || el instanceof NodeList) return el.length > 0
+        return el.nodeType === 1 // Element node
+      }
+
       // Селекторы
       const startDateContent = self.selector('.hero__tag--start .hero__tag-content')
       const formatContent = self.selector('.hero__tag--format .hero__tag-content')
@@ -57,38 +66,38 @@ export function useHeroAnimation(containerRef) {
       // --- Установка начального состояния (gsap.set) ---
 
       // 1. Tags (Top) -> Fly In from Top (-50px)
-      if (startDateContent) gsap.set(startDateContent, { y: -50, autoAlpha: 0 })
-      if (formatContent) gsap.set(formatContent, { y: -50, autoAlpha: 0 })
+      if (isValidElement(startDateContent)) gsap.set(startDateContent, { y: -50, autoAlpha: 0 })
+      if (isValidElement(formatContent)) gsap.set(formatContent, { y: -50, autoAlpha: 0 })
 
       // 2. Headline Wrapper -> Hidden (Standard)
-      if (headlineWrapper) gsap.set(headlineWrapper, { y: '0.5rem', autoAlpha: 0 })
+      if (isValidElement(headlineWrapper)) gsap.set(headlineWrapper, { y: '0.5rem', autoAlpha: 0 })
 
       // 3. Headline Chars -> Chaotic positions (Keep existing)
-      if (charV) gsap.set(charV, { x: '2.7rem', autoAlpha: 0 })
-      if (charI) gsap.set(charI, { x: '-2rem', autoAlpha: 0 })
-      if (charZ) gsap.set(charZ, { x: '2.1rem', autoAlpha: 0 })
-      if (charA1) gsap.set(charA1, { x: '-1.2rem', autoAlpha: 0 })
-      if (charZh) gsap.set(charZh, { x: '-3.2rem', autoAlpha: 0 })
-      if (charI2) gsap.set(charI2, { x: '-2rem', autoAlpha: 0 })
-      if (charS) gsap.set(charS, { x: '4.3rem', autoAlpha: 0 })
-      if (charT) gsap.set(charT, { x: '1.9rem', autoAlpha: 0 })
+      if (isValidElement(charV)) gsap.set(charV, { x: '2.7rem', autoAlpha: 0 })
+      if (isValidElement(charI)) gsap.set(charI, { x: '-2rem', autoAlpha: 0 })
+      if (isValidElement(charZ)) gsap.set(charZ, { x: '2.1rem', autoAlpha: 0 })
+      if (isValidElement(charA1)) gsap.set(charA1, { x: '-1.2rem', autoAlpha: 0 })
+      if (isValidElement(charZh)) gsap.set(charZh, { x: '-3.2rem', autoAlpha: 0 })
+      if (isValidElement(charI2)) gsap.set(charI2, { x: '-2rem', autoAlpha: 0 })
+      if (isValidElement(charS)) gsap.set(charS, { x: '4.3rem', autoAlpha: 0 })
+      if (isValidElement(charT)) gsap.set(charT, { x: '1.9rem', autoAlpha: 0 })
       // Hide the subtitle text above the headline
       const subtitle = self.selector('.hero__headline-top-wrapper .text--subtitle')
-      if (subtitle) gsap.set(subtitle, { autoAlpha: 1 }) // Initially visible or handled by headline wrapper
+      if (isValidElement(subtitle)) gsap.set(subtitle, { autoAlpha: 1 }) // Initially visible or handled by headline wrapper
 
       // 4. Short Text (Left/Right) -> Fly In from Side (-50px / 50px)
-      if (titleLeftWrapper) gsap.set(titleLeftWrapper, { x: -50, autoAlpha: 0 })
-      if (titleRightWrapper) gsap.set(titleRightWrapper, { x: 50, autoAlpha: 0 })
+      if (isValidElement(titleLeftWrapper)) gsap.set(titleLeftWrapper, { x: -50, autoAlpha: 0 })
+      if (isValidElement(titleRightWrapper)) gsap.set(titleRightWrapper, { x: 50, autoAlpha: 0 })
 
       // 5. Long Text (TextReveal) -> Hidden down
-      if (mentorshipWords) gsap.set(mentorshipWords, { y: '110%', autoAlpha: 0 })
+      if (isValidElement(mentorshipWords)) gsap.set(mentorshipWords, { y: '110%', autoAlpha: 0 })
       // Signature container should be visible, paths will be hidden by dashoffset
-      if (signature) gsap.set(signature, { autoAlpha: 1, y: 0 })
-      if (earningsWords) gsap.set(earningsWords, { y: '110%', autoAlpha: 0 })
+      if (isValidElement(signature)) gsap.set(signature, { autoAlpha: 1, y: 0 })
+      if (isValidElement(earningsWords)) gsap.set(earningsWords, { y: '110%', autoAlpha: 0 })
 
       // 6. Models -> ClipPath or Hidden
       // Model 1 (Back): Ready for Clip Reveal
-      if (modelBack)
+      if (isValidElement(modelBack))
         gsap.set(modelBack, {
           clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
           autoAlpha: 1,
@@ -96,10 +105,12 @@ export function useHeroAnimation(containerRef) {
           xPercent: -50
         })
       // Other Models: Hidden
-      if (modelSide) gsap.set(modelSide, { left: '35%', xPercent: -50, autoAlpha: 0 })
-      if (modelFront) gsap.set(modelFront, { left: '50%', xPercent: -50, autoAlpha: 0 })
+      if (isValidElement(modelSide))
+        gsap.set(modelSide, { left: '35%', xPercent: -50, autoAlpha: 0 })
+      if (isValidElement(modelFront))
+        gsap.set(modelFront, { left: '50%', xPercent: -50, autoAlpha: 0 })
 
-      if (cta) gsap.set(cta, { scale: 0.417, y: '0.4rem', autoAlpha: 0 })
+      if (isValidElement(cta)) gsap.set(cta, { scale: 0.417, y: '0.4rem', autoAlpha: 0 })
 
       // --- Animation Timeline ---
       const timeline = gsap.timeline()
@@ -108,7 +119,7 @@ export function useHeroAnimation(containerRef) {
       timeline.addLabel('start', 0)
 
       // Reveal Model 1 (Clip Path)
-      if (modelBack) {
+      if (isValidElement(modelBack)) {
         timeline.to(
           modelBack,
           {
@@ -121,7 +132,7 @@ export function useHeroAnimation(containerRef) {
       }
 
       // Reveal Tags (Fly In Top)
-      if (startDateContent) {
+      if (isValidElement(startDateContent)) {
         timeline.to(
           startDateContent,
           {
@@ -133,7 +144,7 @@ export function useHeroAnimation(containerRef) {
           'start+=0.3'
         )
       }
-      if (formatContent) {
+      if (isValidElement(formatContent)) {
         timeline.to(
           formatContent,
           {
@@ -150,7 +161,7 @@ export function useHeroAnimation(containerRef) {
       timeline.addLabel('left_side', 0.8)
 
       // Short Text (Fly In Left)
-      if (titleLeftWrapper) {
+      if (isValidElement(titleLeftWrapper)) {
         timeline.to(
           titleLeftWrapper,
           {
@@ -164,7 +175,7 @@ export function useHeroAnimation(containerRef) {
       }
 
       // Long Text (TextReveal Stagger)
-      if (mentorshipWords.length) {
+      if (isValidElement(mentorshipWords) && mentorshipWords.length) {
         timeline.to(
           mentorshipWords,
           {
@@ -204,7 +215,7 @@ export function useHeroAnimation(containerRef) {
       timeline.addLabel('swap_1_2', 2.0)
 
       // Model 1 Floats Right & Fades Out
-      if (modelBack) {
+      if (isValidElement(modelBack)) {
         timeline.to(
           modelBack,
           {
@@ -218,7 +229,7 @@ export function useHeroAnimation(containerRef) {
       }
 
       // Model 2 Floats In from Left & Fades In
-      if (modelSide) {
+      if (isValidElement(modelSide)) {
         // We need to set start position manually in timeline or ensure set was correct
         // We set initial xPercent -50. We want to animate 'x' (pixels) from -50 to 0.
         timeline.fromTo(
@@ -233,7 +244,7 @@ export function useHeroAnimation(containerRef) {
       // Starts slightly after swap begins
       timeline.addLabel('headline', 'swap_1_2+=0.3')
 
-      if (headlineWrapper) {
+      if (isValidElement(headlineWrapper)) {
         timeline.to(
           headlineWrapper,
           {
@@ -247,45 +258,45 @@ export function useHeroAnimation(containerRef) {
       }
 
       const charsTimeline = gsap.timeline()
-      if (charV)
+      if (isValidElement(charV))
         charsTimeline.to(charV, { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase }, 0)
-      if (charZ)
+      if (isValidElement(charZ))
         charsTimeline.to(
           charZ,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.1
         )
-      if (charA1)
+      if (isValidElement(charA1))
         charsTimeline.to(
           charA1,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.15
         )
-      if (charZh)
+      if (isValidElement(charZh))
         charsTimeline.to(
           charZh,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.2
         )
-      if (charI)
+      if (isValidElement(charI))
         charsTimeline.to(
           charI,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.25
         )
-      if (charI2)
+      if (isValidElement(charI2))
         charsTimeline.to(
           charI2,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.3
         )
-      if (charS)
+      if (isValidElement(charS))
         charsTimeline.to(
           charS,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
           0.35
         )
-      if (charT)
+      if (isValidElement(charT))
         charsTimeline.to(
           charT,
           { x: '0rem', autoAlpha: 1, duration: fiftyFrames, ease: cgEase },
@@ -298,7 +309,7 @@ export function useHeroAnimation(containerRef) {
       timeline.addLabel('right_side', 'headline+=0.5')
 
       // Short Text (Fly In Right)
-      if (titleRightWrapper) {
+      if (isValidElement(titleRightWrapper)) {
         timeline.to(
           titleRightWrapper,
           {
@@ -312,7 +323,7 @@ export function useHeroAnimation(containerRef) {
       }
 
       // Long Text (TextReveal Stagger)
-      if (earningsWords.length) {
+      if (isValidElement(earningsWords) && earningsWords.length) {
         timeline.to(
           earningsWords,
           {
@@ -332,7 +343,7 @@ export function useHeroAnimation(containerRef) {
       // right_side is headline + 0.5. So swap_2_3 = right_side + 1.9.
       timeline.addLabel('swap_2_3', 'right_side+=1.9')
 
-      if (modelSide) {
+      if (isValidElement(modelSide)) {
         timeline.to(
           modelSide,
           {
@@ -345,7 +356,7 @@ export function useHeroAnimation(containerRef) {
         )
       }
 
-      if (modelFront) {
+      if (isValidElement(modelFront)) {
         timeline.fromTo(
           modelFront,
           { x: -50, autoAlpha: 0 },
@@ -356,7 +367,7 @@ export function useHeroAnimation(containerRef) {
 
       // CTA
       timeline.addLabel('cta', 'swap_2_3+=0.5')
-      if (cta) {
+      if (isValidElement(cta)) {
         timeline.to(
           cta,
           {
@@ -371,22 +382,25 @@ export function useHeroAnimation(containerRef) {
       }
 
       // === Scroll Transition (Typography Gateway) ===
-      // Find the wrapper (parent of hero)
+      // Find the wrapper (parent of hero) - вне scope hero, используем closest или document.querySelector
       const transitionWrapper =
-        self.selector('.hero-transition-wrapper')[0] ||
-        containerRef.value.closest('.hero-transition-wrapper')
+        containerRef.value?.closest('.hero-transition-wrapper') ||
+        document.querySelector('.hero-transition-wrapper')
       const aboutSection = document.querySelector('.about') // Need to find global About section
 
+      let scrollTl = null
+
       if (transitionWrapper && aboutSection) {
-        // Set initial state for transition
-        // Ensure About is visible but behind
+        // Set initial positioning for transition
+        // Координатор - единственный источник правды для управления visibility (autoAlpha)
+        // Hero animation управляет только позиционированием для transition
         gsap.set(aboutSection, {
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          zIndex: 1,
-          visibility: 'visible'
+          zIndex: 1
+          // НЕ устанавливаем visibility/opacity/autoAlpha - координатор управляет этим
         })
         gsap.set(containerRef.value, {
           position: 'relative',
@@ -394,19 +408,27 @@ export function useHeroAnimation(containerRef) {
           backgroundColor: 'transparent' // Ensure hero background doesn't block
         })
 
-        const scrollTl = gsap.timeline({
+        scrollTl = gsap.timeline({
           scrollTrigger: {
+            id: 'hero-transition',
             trigger: transitionWrapper,
             start: 'top top',
             end: '+=2000', // Adjust for speed
             pin: true,
-            scrub: 1
+            scrub: 1,
+            refreshPriority: 2, // Высокий приоритет - refresh первым
+            onUpdate: () => {
+              // Координатор управляет видимостью About на основе прогресса
+              if (coordinator && typeof coordinator.updateAboutVisibility === 'function') {
+                coordinator.updateAboutVisibility()
+              }
+            }
             // markers: true // For debugging
           }
         })
 
         // 1. Zoom Text (Gap between A and Zh)
-        if (titleRow) {
+        if (isValidElement(titleRow)) {
           scrollTl.to(titleRow, {
             scale: 300, // Even bigger scale to ensure we go "through"
             // V I Z A | Zh I S T. Yes, center is still roughly between A and Zh.
@@ -427,59 +449,23 @@ export function useHeroAnimation(containerRef) {
           self.selector('.hero__title-left'),
           self.selector('.hero__title-right'),
           self.selector('.hero__headline-top-wrapper .text--subtitle') // Added subtitle to fade out
-        ]
+        ].filter(el => isValidElement(el))
 
-        scrollTl.to(
-          elementsToFade,
-          {
-            autoAlpha: 0,
-            duration: 0.3
-          },
-          0
-        )
-
-        // === About Section Integration ===
-        // Instead of About handling its own trigger, we can trigger it here or sync it.
-        // Or simpler: Let About section just have a normal ScrollTrigger but ensure start point is correct.
-        // Since Hero is pinned for 2000px, About is technically "underneath" or "waiting".
-
-        // Option A: Fire About animation when zoom is almost done.
-        if (aboutSection) {
-          // Find the About component instance or elements if possible, or dispatch event
-          // Better: use a class to trigger CSS or separate GSAP animation
-
-          // Let's manually trigger the entry animation for About elements here to ensure perfect sync
-          const aboutImage = aboutSection.querySelector('.about__image')
-          const aboutLines = aboutSection.querySelectorAll('.line-inner')
-
-          if (aboutImage || aboutLines.length > 0) {
-            // Image
-            if (aboutImage) {
-              scrollTl.fromTo(
-                aboutImage,
-                { autoAlpha: 0, y: 50 },
-                { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-                0.6 // Start at 60% of scroll
-              )
-            }
-
-            // Lines (Title, Paragraphs, List Items) - Fashion Reveal
-            if (aboutLines.length > 0) {
-              // Ensure initial state is tracked by GSAP
-              scrollTl.fromTo(
-                aboutLines,
-                { y: '100%' },
-                {
-                  y: '0%',
-                  stagger: 0.05,
-                  duration: 1.0,
-                  ease: 'power3.out'
-                },
-                0.7
-              )
-            }
-          }
+        if (elementsToFade.length > 0) {
+          scrollTl.to(
+            elementsToFade,
+            {
+              autoAlpha: 0,
+              duration: 0.3
+            },
+            0
+          )
         }
+
+        // === About Section ===
+        // About управляет своими внутренними анимациями через useAboutAnimation composable
+        // Координатор управляет visibility (autoAlpha) About на основе прогресса hero timeline
+        // НЕТ анимаций About элементов здесь - About управляет собой сама!
 
         // 3. Ensure Hero container itself fades out at the end so it doesn't block pointer events
         // AND IMPORTANTLY: Set display: none to completely remove it from flow/interaction
@@ -498,8 +484,20 @@ export function useHeroAnimation(containerRef) {
           },
           0.9
         )
+
+        // КРИТИЧНО: Refresh после всех анимаций
+        if (scrollTl && scrollTl.scrollTrigger) {
+          scrollTl.scrollTrigger.refresh()
+        }
+      }
+
+      // Сохраняем timeline для возврата
+      if (scrollTl) {
+        heroTimeline = scrollTl
       }
     }, containerRef.value)
+
+    return heroTimeline
   }
 
   onUnmounted(() => {
@@ -507,6 +505,6 @@ export function useHeroAnimation(containerRef) {
   })
 
   return {
-    initAnimation
+    initAnimation // Возвращает timeline для регистрации в координаторе
   }
 }

@@ -1,0 +1,89 @@
+@use '../design-system.scss' as *;
+
+.reviews {
+  padding: $spacing-section 0;
+  background-color: $color-neutral-gray-50;
+  overflow: hidden;
+}
+
+.reviews__title {
+  text-align: center;
+  margin-bottom: $spacing-8;
+}
+
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-6;
+  height: 80vh; // Restrict height to create a "window"
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr; // On mobile, maybe just one column or horizontal slider
+    height: auto;
+    mask-image: none;
+    overflow: visible;
+  }
+}
+
+.reviews__column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @media (max-width: $breakpoint-md) {
+    // Mobile fallback styles if needed, or keep vertical scroll
+  }
+}
+
+.reviews__card {
+  background-color: $color-neutral-white;
+  padding: $spacing-6;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.reviews__card-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.reviews__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: $color-primary-100;
+  color: $color-primary-700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-lg;
+}
+
+.reviews__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviews__name {
+  font-weight: $font-weight-semibold;
+  color: $color-neutral-gray-800;
+}
+
+.reviews__date {
+  color: $color-neutral-gray-200; // Actually lighter gray
+  // Check design system variable for lighter text, maybe gray-400 equivalent if exists, else opacity
+  color: rgba($color-neutral-gray-800, 0.5);
+}
+
+.reviews__text {
+  color: $color-neutral-gray-800;
+  line-height: 1.6;
+}

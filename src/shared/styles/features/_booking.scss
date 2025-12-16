@@ -1,0 +1,75 @@
+@use '../design-system.scss' as *;
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.booking-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.booking-form__label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-neutral-gray-800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.booking-form__input,
+.booking-form__textarea {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-base;
+  font-family: $font-family-primary;
+  color: $color-neutral-gray-800;
+  background-color: $color-neutral-white;
+  border: 2px solid $color-neutral-gray-200;
+  border-radius: $border-radius-md;
+  transition: $transition-default;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
+  }
+
+  &::placeholder {
+    color: $color-neutral-gray-200;
+  }
+}
+
+.booking-form__input--error {
+  border-color: $color-semantic-error;
+}
+
+.booking-form__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.booking-form__error {
+  font-size: $font-size-sm;
+  color: $color-semantic-error;
+}
+
+.booking-form__submit {
+  margin-top: $spacing-2;
+  align-self: center;
+}
+
+.booking-form__success {
+  padding: $spacing-3;
+  background-color: rgba($color-semantic-success, 0.1);
+  border: 2px solid $color-semantic-success;
+  border-radius: $border-radius-md;
+  color: $color-semantic-success;
+  text-align: center;
+  font-size: $font-size-sm;
+}

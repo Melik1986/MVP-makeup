@@ -1,8 +1,7 @@
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { onMounted, onUnmounted } from 'vue'
-
-import { ScrollTrigger } from '@shared/libs/gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 

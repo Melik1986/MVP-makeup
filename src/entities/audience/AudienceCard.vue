@@ -48,51 +48,5 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-.audience-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  background: transparent;
-}
-
-.audience-card__image-wrapper {
-  width: 120px;
-  height: 120px;
-  margin-bottom: $spacing-3;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: $shadow-floating-object;
-}
-
-.audience-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.audience-card__title {
-  font-size: $font-size-base;
-  font-weight: $font-weight-bold;
-  margin-bottom: $spacing-2;
-  text-transform: uppercase;
-  color: $color-neutral-gray-800;
-}
-
-.audience-card__divider {
-  height: 1px;
-  width: 40px;
-  background: $color-neutral-gray-800;
-  margin: $spacing-2 0;
-}
-
-.audience-card__description {
-  margin-bottom: $spacing-3;
-  color: $color-neutral-gray-800;
-}
-
-.audience-card__result {
-  color: $color-neutral-gray-800;
-  font-weight: $font-weight-medium;
-}
+// Styles moved to src/shared/styles/entities/_audience-card.scss
 </style>
