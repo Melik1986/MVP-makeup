@@ -9,9 +9,12 @@
   margin-bottom: $spacing-8;
 }
 
+.audience-section__header .audience-section__subtitle.text--subtitle {
+  color: rgba(160, 97, 73, 1) !important;
+}
+
 .audience-section__subtitle {
   margin-top: $spacing-2;
-  color: $color-neutral-gray-800;
   text-align: center;
 }
 
