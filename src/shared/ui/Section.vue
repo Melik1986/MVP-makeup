@@ -41,26 +41,19 @@ const sectionClass = computed(() => ({
 
 .section--padding-none {
   padding: 0;
+  padding-top: $spacing-4;
 }
 
 .section--padding-sm {
-  padding: $spacing-6 0;
+  @include responsive-padding($spacing-6 0, $spacing-4 0, $spacing-6 0);
 }
 
 .section--padding-default {
-  padding: $spacing-8 0;
-
-  @media (max-width: $breakpoint-md) {
-    padding: $spacing-4 0;
-  }
+  @include responsive-padding($spacing-4 0, $spacing-6 0, $spacing-8 0);
 }
 
 .section--padding-lg {
-  padding: $spacing-section 0;
-
-  @media (max-width: $breakpoint-md) {
-    padding: $spacing-8 0;
-  }
+  @include section-spacing;
 }
 
 .section--bg-white {

@@ -8,6 +8,16 @@
 
     <Section :padding="hideTitle ? 'lg' : 'none'" :background="hideTitle ? 'gray' : 'transparent'">
       <div class="booking-form">
+        <div ref="decorCreamRef" class="booking-form__decorative-cream">
+          <img
+            src="/cream.png"
+            alt="Крем"
+            class="booking-form__decoration"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
+        </div>
         <form class="booking-form__form" @submit.prevent="handleSubmit">
           <div class="booking-form__field">
             <label for="name" class="booking-form__label">Имя</label>
@@ -82,6 +92,8 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 import Button from '@shared/ui/Button.vue'
 import Heading from '@shared/ui/Heading.vue'
 import Section from '@shared/ui/Section.vue'
@@ -96,6 +108,8 @@ const { hideTitle } = defineProps({
 })
 
 const { form, errors, isSubmitting, isSuccess, submitForm: handleSubmit } = useBookingForm()
+
+const decorCreamRef = ref(null)
 </script>
 
 <style scoped lang="scss">

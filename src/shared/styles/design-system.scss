@@ -39,6 +39,8 @@ $gradient-hero-overlay: radial-gradient(circle at center, #5e1319 0%, #1a0406 80
 $font-family-primary: 'Montserrat', Helvetica, Arial, sans-serif;
 $font-family-secondary: 'Playfair Display', serif;
 $font-family-script: 'Great Vibes', cursive;
+$font-family-section-title: 'Prata', serif;
+$font-family-body: 'Lora', serif;
 
 $font-size-xs: 12px;
 $font-size-sm: 14px;
@@ -62,14 +64,19 @@ $font-weight-black: 900;
 
 // Spacing Scale (base unit: 8px)
 $spacing-0: 0px;
-$spacing-1: 8px;
-$spacing-2: 16px;
-$spacing-3: 24px;
-$spacing-4: 32px;
-$spacing-6: 48px;
-$spacing-8: 64px;
-$spacing-12: 96px;
-$spacing-section: 120px;
+$spacing-1: 8px; // 0.5rem
+$spacing-2: 16px; // 1rem
+$spacing-3: 24px; // 1.5rem
+$spacing-4: 32px; // 2rem
+$spacing-5: 40px; // 2.5rem
+$spacing-6: 48px; // 3rem
+$spacing-8: 64px; // 4rem
+$spacing-10: 80px; // 5rem
+$spacing-12: 96px; // 6rem
+$spacing-14: 112px; // 7rem
+$spacing-16: 128px; // 8rem
+$spacing-section: 120px; // Для секций
+$spacing-section-mobile: 64px; // Для секций на мобильных
 
 // Border Radius
 $border-radius-none: 0px;
@@ -104,15 +111,19 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
 
+// Breakpoint boundaries (for media queries)
+$breakpoint-md-max: 767px;
+$breakpoint-lg-max: 1023px;
+
 // Mixins для медиа-запросов
 @mixin mobile {
-  @media (max-width: $breakpoint-md - 1px) {
+  @media (max-width: $breakpoint-md-max) {
     @content;
   }
 }
 
 @mixin tablet {
-  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1px) {
+  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg-max) {
     @content;
   }
 }
@@ -121,4 +132,42 @@ $breakpoint-xl: 1280px;
   @media (min-width: $breakpoint-lg) {
     @content;
   }
+}
+
+// Адаптивный spacing миксин (mobile-first)
+// Использование: @include responsive-spacing(padding, $spacing-8, $spacing-4);
+@mixin responsive-spacing($property, $mobile, $tablet: null, $desktop: null) {
+  #{$property}: $mobile;
+
+  @if $tablet {
+    @include tablet {
+      #{$property}: $tablet;
+    }
+  }
+
+  @if $desktop {
+    @include desktop {
+      #{$property}: $desktop;
+    }
+  }
+}
+
+// Адаптивный gap
+@mixin responsive-gap($mobile, $tablet: null, $desktop: null) {
+  @include responsive-spacing(gap, $mobile, $tablet, $desktop);
+}
+
+// Адаптивный padding
+@mixin responsive-padding($mobile, $tablet: null, $desktop: null) {
+  @include responsive-spacing(padding, $mobile, $tablet, $desktop);
+}
+
+// Адаптивный margin
+@mixin responsive-margin($mobile, $tablet: null, $desktop: null) {
+  @include responsive-spacing(margin, $mobile, $tablet, $desktop);
+}
+
+// Секционный spacing (унифицированные отступы между секциями)
+@mixin section-spacing {
+  @include responsive-padding($spacing-section-mobile 0, $spacing-8 0, $spacing-section 0);
 }

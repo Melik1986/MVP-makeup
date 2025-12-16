@@ -35,8 +35,9 @@ const headingClass = computed(() => ({
 }
 
 .heading--hero {
+  font-family: $font-family-primary; // Hero остается с Montserrat
   font-size: $font-size-hero;
-  font-weight: $font-weight-light;
+  font-weight: $font-weight-semibold;
   line-height: $line-height-tight;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -60,6 +61,7 @@ const headingClass = computed(() => ({
 }
 
 .heading--section {
+  font-family: $font-family-section-title;
   font-size: $font-size-2xl;
   font-weight: $font-weight-regular;
   text-transform: uppercase;

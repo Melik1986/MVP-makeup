@@ -33,6 +33,7 @@ const textClass = computed(() => ({
 }
 
 .text--body {
+  font-family: $font-family-body;
   font-size: $font-size-base;
   line-height: $line-height-normal;
   color: $color-neutral-gray-800;

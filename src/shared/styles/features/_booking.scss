@@ -1,12 +1,43 @@
 @use '../design-system.scss' as *;
 
 .booking-form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
+}
+
+.booking-form__decorative-cream {
+  position: absolute;
+  right: -180px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+
+  @include tablet {
+    display: none;
+  }
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.booking-form__decoration {
+  max-width: 146px;
+  height: auto;
+  filter: drop-shadow($shadow-floating-object);
+  transform: rotate(-15deg);
+}
+
+.booking-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
 }
 
 .booking-form__field {
@@ -28,7 +59,7 @@
   width: 100%;
   padding: $spacing-2 $spacing-3;
   font-size: $font-size-base;
-  font-family: $font-family-primary;
+  font-family: $font-family-body;
   color: $color-neutral-gray-800;
   background-color: $color-neutral-white;
   border: 2px solid $color-neutral-gray-200;

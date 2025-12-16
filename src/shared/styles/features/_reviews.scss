@@ -1,7 +1,7 @@
 @use '../design-system.scss' as *;
 
 .reviews {
-  padding: $spacing-section 0;
+  @include section-spacing;
   background-color: $color-neutral-gray-50;
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
   position: relative;
   mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     grid-template-columns: 1fr; // On mobile, maybe just one column or horizontal slider
     height: auto;
     mask-image: none;

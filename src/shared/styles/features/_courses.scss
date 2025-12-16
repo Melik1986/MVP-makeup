@@ -1,7 +1,7 @@
 @use '../design-system.scss' as *;
 
 .courses {
-  padding: $spacing-section 0;
+  @include section-spacing;
   background-color: $color-neutral-white;
   position: relative;
 }
@@ -33,12 +33,19 @@
   border-radius: 4px;
 
   &--dark {
-    background-color: $color-neutral-gray-800;
-    color: $color-neutral-white;
+    background: linear-gradient(
+      180deg,
+      $color-bg-hero-gradient-start 0%,
+      $color-bg-hero-gradient-end 100%
+    );
 
     .courses__card-title,
+    .heading--default {
+      color: rgba(255, 255, 255, 1) !important;
+    }
+
     .text--body {
-      color: $color-neutral-white;
+      color: rgba(255, 255, 240, 0.6) !important;
     }
   }
 }

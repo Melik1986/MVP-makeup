@@ -3,7 +3,7 @@
 .about {
   position: relative;
   min-height: 100vh;
-  padding: $spacing-section 0;
+  @include section-spacing;
   background-color: $color-neutral-white;
   overflow: hidden;
   z-index: 1; // Lower than Hero initially if we want Hero to cover it
@@ -16,13 +16,12 @@
 .about__content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $spacing-8;
   align-items: center;
   height: 100%;
+  @include responsive-gap($spacing-8, $spacing-12, $spacing-8);
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     grid-template-columns: 1fr;
-    gap: $spacing-12;
   }
 }
 
@@ -55,7 +54,6 @@
 }
 
 .about__description {
-  font-family: $font-family-primary;
   font-size: clamp(1rem, 2vw, 1.25rem); // Adaptive font size
   line-height: 1.6;
   color: $color-neutral-gray-800;
@@ -85,7 +83,6 @@
 .about__list-item {
   display: flex;
   align-items: center;
-  font-family: $font-family-primary;
   font-size: clamp(1rem, 1.5vw, 1.125rem);
 
   .about__list-item-text {
