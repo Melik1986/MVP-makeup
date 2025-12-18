@@ -34,12 +34,16 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
         return
       }
 
+      const isMobile = window.innerWidth <= 768
       const baseXPercent = -50
+
+      // Vertical position: lift cards up on mobile to reduce gap
+      const topPos = isMobile ? '42%' : '50%'
 
       // Initial Setup
       gsap.set(cards, {
         left: '50%',
-        top: '50%',
+        top: topPos,
         yPercent: -50,
         willChange: 'transform, opacity'
       })
@@ -100,11 +104,7 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
           {
             scale: 0.92,
             opacity: 0.55,
-            duration: 1,
-            onStart: () => {
-              // Optional: Fade out content of previous card when it starts leaving?
-              // Keeping it keeps the design cleaner usually, or we can dim it.
-            }
+            duration: 1
           },
           tl.duration()
         )
@@ -147,9 +147,6 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
             gsap.set(progressFills, { scaleX: progress })
           }
 
-          // Calculate current index accurately
-          // We map progress 0..1 to card indices 0..length-1
-          // We add a small buffer/threshold to trigger animations cleanly
           const totalCards = cards.length
           const segment = 1 / (totalCards - 1)
           const index = Math.round(progress / segment)

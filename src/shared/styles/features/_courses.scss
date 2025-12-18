@@ -7,11 +7,16 @@
 }
 
 .courses__title {
-  margin: 0 0 $spacing-6;
+  margin: 0 auto $spacing-6;
   text-align: center;
+  width: 100%;
+  display: block;
 
   @include mobile {
-    margin-bottom: $spacing-5;
+    margin-bottom: $spacing-4;
+    font-size: $font-size-2xl;
+    padding: 0 $spacing-4;
+    box-sizing: border-box;
   }
 }
 
@@ -19,7 +24,7 @@
   margin-bottom: $spacing-6;
 
   @include mobile {
-    margin-bottom: $spacing-2;
+    margin-bottom: $spacing-4;
   }
 }
 
@@ -35,7 +40,7 @@
     rgba($color-neutral-white, 0.9) 0%,
     $color-neutral-gray-50 100%
   );
-  border: 1px solid rgba($color-neutral-gray-800, 0.08);
+  // border: 1px solid rgba($color-neutral-gray-800, 0.08);
 
   @include mobile {
     height: 100svh;
@@ -52,10 +57,11 @@
   flex-direction: column;
   align-items: center;
   padding: $spacing-6;
+  box-sizing: border-box;
 
   @include mobile {
-    padding: $spacing-3;
-    padding-top: calc(#{$spacing-3} + 53px + env(safe-area-inset-top));
+    padding: 0; // Remove horizontal padding to allow 100% width
+    padding-top: calc(#{$spacing-4} + 20px + env(safe-area-inset-top));
   }
 }
 
@@ -64,13 +70,15 @@
   width: 100%;
   flex: 1;
   min-height: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .courses__card {
   position: absolute;
   width: min(92vw, 760px);
   height: min(68vh, 560px);
-  background: $color-neutral-white; // Solid base to remove transparency
+  background: $color-neutral-white;
   padding: $spacing-12;
   padding-bottom: calc(#{$spacing-12} + 56px);
   display: flex;
@@ -83,7 +91,7 @@
   isolation: isolate;
 
   &--dark {
-    background: #1a0406; // Solid dark base
+    background: #1a0406;
     border-color: rgba($color-neutral-white, 0.18);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 
@@ -129,17 +137,17 @@
   }
 
   @include tablet {
-    width: min(92vw, 680px);
-    height: min(66vh, 520px);
+    width: min(94vw, 680px);
+    height: min(75vh, 520px);
     padding: $spacing-8;
     padding-bottom: calc(#{$spacing-8} + 52px);
   }
 
   @include mobile {
-    width: calc(100% - #{$spacing-4 * 2});
-    height: min(62vh, 480px);
-    padding: $spacing-6;
-    padding-bottom: calc(#{$spacing-6} + 52px);
+    width: calc(100% - 164px); // Increased margin from edges
+    height: min(68vh, 480px); // Reverted height
+    padding: $spacing-8; // Increased internal padding
+    padding-bottom: calc(#{$spacing-8} + 60px);
     border-radius: $border-radius-md;
   }
 }
@@ -165,7 +173,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  height: 90%; // Reduced size as requested
+  height: 90%;
   width: auto;
   object-fit: contain;
   z-index: 2;
@@ -174,8 +182,9 @@
   transform-origin: bottom right;
 
   @include mobile {
-    height: 75%;
-    right: -10%;
+    height: 55%;
+    right: 0; // Better positioning
+    bottom: 5%;
   }
 }
 
@@ -186,7 +195,7 @@
 .courses__card-overlay {
   position: absolute;
   inset: 0;
-  z-index: 3; // Above image/texture for text readability
+  z-index: 3;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -194,6 +203,15 @@
     rgba(255, 255, 255, 0) 100%
   );
   pointer-events: none;
+
+  @include mobile {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.8) 60%,
+      rgba(255, 255, 255, 0.2) 100%
+    );
+  }
 }
 
 .courses__card--dark .courses__card-overlay {
@@ -203,6 +221,15 @@
     rgba(26, 4, 6, 0.8) 40%,
     rgba(26, 4, 6, 0) 100%
   );
+
+  @include mobile {
+    background: linear-gradient(
+      180deg,
+      rgba(26, 4, 6, 0.95) 0%,
+      rgba(26, 4, 6, 0.8) 60%,
+      rgba(26, 4, 6, 0.2) 100%
+    );
+  }
 }
 
 .courses__card-header {
@@ -216,16 +243,20 @@
 }
 
 .courses__card-badge {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: 1px solid rgba(51, 51, 51, 0.2);
   border-radius: 100px;
   font-family: $font-family-primary;
-  font-size: $font-size-xs;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(51, 51, 51, 0.8);
   backdrop-filter: blur(4px);
   opacity: 0;
+
+  @include mobile {
+    padding: 4px 10px;
+  }
 }
 
 .courses__card-index {
@@ -233,6 +264,11 @@
   font-size: $font-size-2xl;
   opacity: 0;
   line-height: 1;
+
+  @include mobile {
+    font-size: $font-size-xl;
+    padding-right: $spacing-2; // Space from edge
+  }
 }
 
 .courses__card-content {
@@ -240,7 +276,7 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: $spacing-4;
-  max-width: 400px; // Contain text to the left
+  max-width: 400px;
   margin-top: auto;
   position: relative;
   z-index: 10;
@@ -248,6 +284,7 @@
 
   @include mobile {
     max-width: 100%;
+    gap: $spacing-3;
   }
 }
 
@@ -256,11 +293,19 @@
   font-size: clamp(#{$font-size-xl}, 6vw, #{$font-size-3xl});
   line-height: $line-height-tight;
   opacity: 0;
+
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
 }
 
 .courses__card-subtitle {
   font-size: $font-size-lg;
   opacity: 0;
+
+  @include mobile {
+    font-size: $font-size-base;
+  }
 }
 
 .courses__card-action {
@@ -270,6 +315,10 @@
   margin-top: $spacing-4;
   cursor: pointer;
   opacity: 0;
+
+  @include mobile {
+    margin-top: $spacing-2;
+  }
 
   &:hover .courses__link-arrow {
     transform: translateX(5px);
@@ -293,6 +342,11 @@
   border: 1px solid rgba(51, 51, 51, 0.2);
   border-radius: 50%;
   transition: transform 0.3s ease;
+
+  @include mobile {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 // Decor
@@ -312,13 +366,20 @@
   border: 1px solid rgba(51, 51, 51, 0.2);
   border-radius: 50%;
   opacity: 0;
+
+  @include mobile {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    right: -50px;
+  }
 }
 
 // Progress
 .courses__progress {
   position: absolute;
-  right: $spacing-6;
-  bottom: $spacing-6;
+  right: $spacing-12;
+  bottom: $spacing-12;
   display: flex;
   align-items: center;
   gap: $spacing-3;
@@ -328,8 +389,8 @@
   transition: opacity 200ms ease;
 
   @include mobile {
-    right: $spacing-4;
-    bottom: $spacing-4;
+    right: $spacing-8; // More space from edge
+    bottom: $spacing-8; // More space from edge
   }
 }
 
@@ -344,7 +405,7 @@
   overflow: hidden;
 
   @include mobile {
-    width: 96px;
+    width: 80px;
   }
 }
 
@@ -367,8 +428,8 @@
   color: rgba($color-neutral-gray-800, 0.9);
 
   @include mobile {
-    font-size: $font-size-xs;
-    letter-spacing: 0.16em;
+    font-size: 10px;
+    letter-spacing: 0.1em;
   }
 }
 
