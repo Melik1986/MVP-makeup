@@ -1,36 +1,78 @@
 @use '../design-system.scss' as *;
 
 .courses {
-  @include section-spacing;
+  padding: 0;
   background-color: $color-neutral-white;
   position: relative;
 }
 
 .courses__title {
-  margin-bottom: $spacing-8;
+  margin: 0 0 $spacing-6;
+  text-align: center;
+
+  @include mobile {
+    margin-bottom: $spacing-5;
+  }
 }
 
-.courses__gallery-wrapper {
-  overflow: hidden;
+.courses__stage {
+  position: relative;
   width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba($color-neutral-white, 0.9) 0%,
+    $color-neutral-gray-50 100%
+  );
+  border: 1px solid rgba($color-neutral-gray-800, 0.08);
+
+  @include mobile {
+    min-height: 560px;
+    border-radius: $border-radius-md;
+  }
 }
 
-.courses__gallery {
+.courses__stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
-  gap: $spacing-8;
-  width: max-content; /* Ensure it takes full width of children */
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-6;
+
+  @include mobile {
+    padding: $spacing-4;
+  }
+}
+
+.courses__cards {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .courses__card {
-  width: 80vw; /* Not full width to see next card peek */
-  max-width: 600px;
-  height: 60vh;
-  background-color: $color-neutral-gray-50;
+  position: absolute;
+  width: min(92vw, 760px);
+  height: min(68vh, 560px);
+  background: linear-gradient(
+    180deg,
+    rgba($color-neutral-white, 0.92) 0%,
+    $color-neutral-gray-50 100%
+  );
   padding: $spacing-8;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 4px;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba($color-neutral-gray-800, 0.08);
+  overflow: hidden;
 
   &--dark {
     background: linear-gradient(
@@ -38,6 +80,8 @@
       $color-bg-hero-gradient-start 0%,
       $color-bg-hero-gradient-end 100%
     );
+    border-color: rgba($color-neutral-white, 0.18);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 
     .courses__card-title,
     .heading--default {
@@ -47,9 +91,91 @@
     .text--body {
       color: rgba(255, 255, 240, 0.6) !important;
     }
+
+    .courses__progress-line {
+      background-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .courses__progress-fill {
+      background-color: rgba(255, 255, 255, 0.92);
+    }
+
+    .courses__progress-count {
+      color: rgba(255, 255, 255, 0.92);
+    }
+  }
+
+  @include tablet {
+    width: min(92vw, 680px);
+    height: min(66vh, 520px);
+    padding: $spacing-6;
+  }
+
+  @include mobile {
+    width: calc(100% - #{$spacing-4 * 2});
+    height: min(62vh, 480px);
+    padding: $spacing-5;
+    border-radius: $border-radius-md;
   }
 }
 
 .courses__card-title {
   margin-bottom: $spacing-4;
+}
+
+.courses__progress {
+  position: absolute;
+  right: $spacing-6;
+  bottom: $spacing-6;
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+
+  @include mobile {
+    right: $spacing-4;
+    bottom: $spacing-4;
+  }
+}
+
+.courses__card.is-active .courses__progress {
+  opacity: 1;
+}
+
+.courses__progress-line {
+  width: 140px;
+  height: 2px;
+  background-color: rgba($color-neutral-gray-800, 0.12);
+  overflow: hidden;
+
+  @include mobile {
+    width: 110px;
+  }
+}
+
+.courses__progress-fill {
+  width: 100%;
+  height: 100%;
+  background-color: $color-primary-500;
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+}
+
+.courses__progress-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: $spacing-1;
+  font-family: $font-family-primary;
+  font-size: $font-size-sm;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba($color-neutral-gray-800, 0.9);
+}
+
+.courses__progress-sep {
+  letter-spacing: 0;
+  opacity: 0.6;
 }
