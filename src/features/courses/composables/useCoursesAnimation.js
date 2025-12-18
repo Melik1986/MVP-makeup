@@ -11,7 +11,6 @@ const logger = useLogger('useCoursesAnimation')
 export function useCoursesAnimation(sectionRef, _coordinator = null) {
   let ctx = null
   let scrollTriggerInstance = null
-  let lastStepIndex = 1
   const scrollTriggerRef = ref(null)
 
   onMounted(() => {
@@ -20,7 +19,6 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
       return
     }
 
-    // Защита от повторного создания при HMR
     if (scrollTriggerInstance) {
       scrollTriggerInstance.kill()
       scrollTriggerInstance = null
@@ -30,20 +28,15 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
       const stage = self.selector('.courses__stage')[0]
       const cards = self.selector('.courses__card')
       const progressFills = self.selector('.courses__progress-fill')
-      const progressCurrents = self.selector('.courses__progress-current')
-      const progressTotals = self.selector('.courses__progress-total')
 
       if (!stage || cards.length === 0) {
         logger.error('Required elements not found', { stage: !!stage, cards: cards.length })
         return
       }
 
-      progressTotals.forEach(totalEl => {
-        totalEl.textContent = String(cards.length).padStart(2, '0')
-      })
-
       const baseXPercent = -50
 
+      // Initial Setup
       gsap.set(cards, {
         left: '50%',
         top: '50%',
@@ -58,28 +51,66 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
           opacity: 1,
           scale: 1
         })
+
+        // Hide internal elements initially
+        const internalElements = card.querySelectorAll(
+          '.courses__card-header, .courses__card-content, .courses__card-badge, .courses__card-index, .courses__card-title, .courses__card-subtitle, .courses__card-action, .courses__decor-circle'
+        )
+        gsap.set(internalElements, {
+          opacity: 0,
+          y: 30
+        })
       })
 
-      cards.forEach((card, index) => {
-        card.classList.toggle('is-active', index === 0)
-      })
+      if (progressFills.length > 0) {
+        gsap.set(progressFills, { scaleX: 0, transformOrigin: '0% 50%' })
+      }
 
-      gsap.set(progressFills, { scaleX: 0, transformOrigin: '0% 50%' })
+      // Helper to animate card content in
+      const animateCardContentIn = card => {
+        const elements = card.querySelectorAll(
+          '.courses__card-header, .courses__card-content, .courses__card-badge, .courses__card-index, .courses__card-title, .courses__card-subtitle, .courses__card-action, .courses__decor-circle'
+        )
+        // Ensure we don't re-animate if already visible
+        if (card.dataset.contentVisible === 'true') return
 
+        gsap.to(elements, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.05,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        })
+        card.dataset.contentVisible = 'true'
+      }
+
+      // Timeline for sliding cards (SCRUBBED)
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
+      // Initially show first card content
+      animateCardContentIn(cards[0])
+
       for (let i = 1; i < cards.length; i += 1) {
+        const prevCard = cards[i - 1]
+        const currentCard = cards[i]
+
         tl.to(
-          cards[i - 1],
+          prevCard,
           {
             scale: 0.92,
             opacity: 0.55,
-            duration: 1
+            duration: 1,
+            onStart: () => {
+              // Optional: Fade out content of previous card when it starts leaving?
+              // Keeping it keeps the design cleaner usually, or we can dim it.
+            }
           },
           tl.duration()
         )
+
         tl.to(
-          cards[i],
+          currentCard,
           {
             xPercent: baseXPercent,
             duration: 1
@@ -96,7 +127,6 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
           if (heroTrigger) {
             return heroTrigger.end
           }
-          logger.warn('Hero trigger not found, using fallback start')
           return 'top top'
         },
         end: () => {
@@ -105,66 +135,52 @@ export function useCoursesAnimation(sectionRef, _coordinator = null) {
           return `+=${Math.round(stageWidth * steps)}`
         },
         pin: stage,
-        scrub: 1,
+        scrub: 1, // Keep scrub for SLIDER movement
         animation: tl,
         invalidateOnRefresh: true,
         anticipatePin: 1,
         refreshPriority: 1,
         onUpdate: selfUpdate => {
           const { progress } = selfUpdate
-          gsap.set(progressFills, { scaleX: progress })
 
-          const nextIndex = Math.min(cards.length, Math.round(progress * (cards.length - 1)) + 1)
-          if (nextIndex !== lastStepIndex) {
-            lastStepIndex = nextIndex
-            const currentText = String(nextIndex).padStart(2, '0')
-
-            progressCurrents.forEach(currentEl => {
-              currentEl.textContent = currentText
-            })
-
-            cards.forEach((card, index) => {
-              card.classList.toggle('is-active', index === nextIndex - 1)
-            })
+          if (progressFills.length > 0) {
+            gsap.set(progressFills, { scaleX: progress })
           }
+
+          // Calculate current index accurately
+          // We map progress 0..1 to card indices 0..length-1
+          // We add a small buffer/threshold to trigger animations cleanly
+          const totalCards = cards.length
+          const segment = 1 / (totalCards - 1)
+          const index = Math.round(progress / segment)
+          const safeIndex = Math.min(Math.max(0, index), totalCards - 1)
+
+          cards.forEach((card, idx) => {
+            if (idx === safeIndex) {
+              card.classList.add('is-active')
+              animateCardContentIn(card) // Trigger detached animation
+            } else {
+              card.classList.remove('is-active')
+            }
+          })
         }
       })
 
-      // Параллакс для заголовка - уходит вверх медленнее после распиннинга секции
-      const title = self.selector('.courses__title')[0]
-      if (title) {
-        ScrollTrigger.create({
-          trigger: sectionRef.value,
-          start: () =>
-            // Начинаем когда основной триггер заканчивается (секция распиннилась)
-            scrollTriggerInstance?.end || 'bottom top',
-          end: '+=400',
-          scrub: 1,
-          onUpdate: self => {
-            // Заголовок движется медленнее - 60% от скорости скролла
-            const { progress } = self
-            const maxY = -200 // Максимальное смещение вверх
-            gsap.set(title, { y: maxY * progress * 0.6 })
-          }
-        })
-      }
-
-      // Сохраняем ссылку на ScrollTrigger для cleanup и регистрации в координаторе
       scrollTriggerRef.value = scrollTriggerInstance
     }, sectionRef.value)
   })
 
   onUnmounted(() => {
-    // Явно убиваем ScrollTrigger перед revert
     if (scrollTriggerInstance) {
       scrollTriggerInstance.kill()
       scrollTriggerInstance = null
     }
 
-    // Revert GSAP context (очищает все анимации в контексте)
     if (ctx) {
       ctx.revert()
       ctx = null
     }
   })
+
+  return scrollTriggerRef
 }

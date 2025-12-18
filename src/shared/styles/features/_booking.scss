@@ -19,11 +19,17 @@
   pointer-events: none;
 
   @include tablet {
-    display: none;
+    right: $spacing-2;
+    top: $spacing-2;
+    transform: none;
+    opacity: 0.6;
   }
 
   @include mobile {
-    display: none;
+    right: $spacing-2;
+    top: $spacing-2;
+    transform: none;
+    opacity: 0.6;
   }
 }
 
@@ -32,12 +38,22 @@
   height: auto;
   filter: drop-shadow($shadow-floating-object);
   transform: rotate(-15deg);
+
+  @include tablet {
+    max-width: 112px;
+  }
+
+  @include mobile {
+    max-width: 92px;
+  }
 }
 
 .booking-form__form {
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+  position: relative;
+  z-index: 2;
 }
 
 .booking-form__field {

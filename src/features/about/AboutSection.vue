@@ -4,7 +4,7 @@
       <div class="about__content">
         <div class="about__image-wrapper">
           <Image
-            src="/model-from.png"
+            src="/models/model-from.png"
             alt="Об авторе"
             class="about__image"
             :width="500"
@@ -52,9 +52,13 @@ import Text from '@shared/ui/Text.vue'
 
 import { useAboutAnimation } from './composables/useAboutAnimation'
 
+type ScrollCoordinator = {
+  registerAboutCallbacks: (callbacks: { onShow: () => void; onHide: () => void }) => void
+}
+
 const aboutRef = ref<HTMLElement | null>(null)
 const { initAnimation, playAnimation, reverseAnimation } = useAboutAnimation(aboutRef)
-const coordinator = inject('scrollCoordinator', null)
+const coordinator = inject<ScrollCoordinator | null>('scrollCoordinator', null)
 
 onMounted(async () => {
   // About сама управляет своими внутренними анимациями

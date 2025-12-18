@@ -10,7 +10,7 @@
       <div class="booking-form">
         <div ref="decorCreamRef" class="booking-form__decorative-cream">
           <img
-            src="/cream.png"
+            src="/decor/cream.png"
             alt="Крем"
             class="booking-form__decoration"
             loading="lazy"

@@ -51,7 +51,7 @@
               <div class="hero__model">
                 <div class="hero__model-container">
                   <img
-                    src="/model-behin.png"
+                    src="/models/model-behin.png"
                     alt="Модель сзади"
                     class="hero__model-image hero__model-back"
                     loading="eager"
@@ -59,7 +59,7 @@
                     fetchpriority="high"
                   />
                   <img
-                    src="/model-from.png"
+                    src="/models/model-from.png"
                     alt="Модель сбоку"
                     class="hero__model-image hero__model-side"
                     loading="eager"
@@ -67,7 +67,7 @@
                     fetchpriority="high"
                   />
                   <img
-                    src="/model-front.png"
+                    src="/models/model-front.png"
                     alt="Модель спереди"
                     class="hero__model-image hero__model-front"
                     loading="eager"

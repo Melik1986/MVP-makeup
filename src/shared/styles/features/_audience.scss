@@ -54,13 +54,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 
   @include tablet {
-    display: none;
+    width: 100%;
   }
 
   @include mobile {
-    display: none;
+    width: 100%;
   }
 }
 
@@ -68,10 +69,22 @@
   max-width: 150px;
   height: auto;
   filter: drop-shadow($shadow-floating-object);
+
+  @include tablet {
+    max-width: 112px;
+  }
+
+  @include mobile {
+    max-width: 88px;
+  }
 }
 
 .audience-section__decorative-right .audience-section__decoration {
   transform: rotate(-20deg);
+
+  @include mobile {
+    transform: rotate(-12deg);
+  }
 }
 
 .audience-section__cta {

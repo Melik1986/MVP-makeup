@@ -1,0 +1,22 @@
+<svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="silk-displacement">
+      <feTurbulence type="turbulence" baseFrequency="0.01 0.005" numOctaves="5" seed="2" result="turbulence"/>
+      <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="30" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+    <linearGradient id="red-deep" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4A0E14"/>
+      <stop offset="100%" stop-color="#2E0509"/>
+    </linearGradient>
+    <linearGradient id="red-light" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A81C26" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#A81C26" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#A81C26" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#red-deep)"/>
+  <rect width="100%" height="100%" fill="url(#red-light)" filter="url(#silk-displacement)"/>
+  <path d="M-100,300 Q400,100 900,300" stroke="rgba(255,255,255,0.05)" stroke-width="200" filter="blur(40px)"/>
+  <path d="M-100,400 Q400,200 900,400" stroke="rgba(255,255,255,0.03)" stroke-width="100" filter="blur(20px)"/>
+</svg>

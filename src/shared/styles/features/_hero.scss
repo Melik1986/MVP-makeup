@@ -8,6 +8,13 @@
   justify-content: center;
   overflow: hidden;
   padding-top: $spacing-10;
+
+  @include mobile {
+    height: 100svh;
+    min-height: 100svh;
+    box-sizing: border-box;
+    padding-top: calc(#{$spacing-6} + env(safe-area-inset-top));
+  }
 }
 
 .hero__background {
@@ -44,6 +51,14 @@
   min-height: calc(100vh - #{$spacing-10});
   position: relative;
   padding-bottom: $spacing-6;
+
+  @include mobile {
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    padding-bottom: calc(#{$spacing-4} + 72px + env(safe-area-inset-bottom));
+  }
 }
 
 .hero__tags {
@@ -81,12 +96,20 @@
   color: $color-neutral-white;
   font-weight: $font-weight-bold;
   font-size: $font-size-lg;
+
+  @include mobile {
+    font-size: $font-size-base;
+  }
 }
 
 .hero__headline {
   width: 100%;
   text-align: center;
   margin: $spacing-8 0;
+
+  @include mobile {
+    margin: $spacing-3 0;
+  }
 }
 
 .hero__headline-top {
@@ -138,6 +161,10 @@
   @media (max-width: $breakpoint-sm) {
     max-width: 250px;
   }
+
+  @include mobile {
+    max-width: 220px;
+  }
 }
 
 .hero__model-container {
@@ -152,6 +179,10 @@
 
   @media (max-width: $breakpoint-sm) {
     min-height: 250px;
+  }
+
+  @include mobile {
+    min-height: 180px;
   }
 }
 
@@ -249,6 +280,10 @@
   @media (max-width: $breakpoint-lg) {
     text-align: center;
   }
+
+  @include mobile {
+    gap: $spacing-4;
+  }
 }
 
 .hero__duration,
@@ -256,6 +291,10 @@
   color: $color-neutral-white;
   font-weight: $font-weight-bold;
   font-size: $font-size-xl;
+
+  @include mobile {
+    font-size: $font-size-lg;
+  }
 }
 
 .hero__mentorship,
@@ -284,6 +323,10 @@
   width: 200px; /* Adjust based on SVG aspect ratio */
   height: auto;
 
+  @include mobile {
+    width: 160px;
+  }
+
   svg {
     width: 100%;
     height: auto;
@@ -302,6 +345,16 @@
 .hero__cta {
   margin-top: $spacing-8;
   z-index: 3;
+
+  @include mobile {
+    position: absolute;
+    left: 50%;
+    bottom: calc(#{$spacing-4} + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: calc(100% - #{$spacing-4 * 2});
+    max-width: 420px;
+    margin-top: 0;
+  }
 }
 
 .hero__text-small {

@@ -11,7 +11,7 @@
       <div class="audience-section__content">
         <div ref="decorLeftRef" class="audience-section__decorative-left">
           <img
-            src="/cosmetic-tube.png"
+            src="/decor/cosmetic-tube.png"
             alt="Косметика"
             class="audience-section__decoration"
             loading="lazy"
@@ -39,7 +39,7 @@
 
         <div ref="decorRightRef" class="audience-section__decorative-right">
           <img
-            src="/makeup-brush.png"
+            src="/decor/makeup-brush.png"
             alt="Кисть"
             class="audience-section__decoration"
             loading="lazy"

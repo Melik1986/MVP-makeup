@@ -7,10 +7,19 @@
   background-color: $color-neutral-white;
   overflow: hidden;
   z-index: 1; // Lower than Hero initially if we want Hero to cover it
+
+  @include mobile {
+    min-height: auto;
+    overflow: visible;
+  }
 }
 
 .about__container {
   height: 100%;
+
+  @include mobile {
+    height: auto;
+  }
 }
 
 .about__content {
@@ -18,10 +27,11 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
   height: 100%;
-  @include responsive-gap($spacing-8, $spacing-12, $spacing-8);
+  @include responsive-gap($spacing-6, $spacing-8, $spacing-8);
 
   @include mobile {
     grid-template-columns: 1fr;
+    height: auto;
   }
 }
 
@@ -30,9 +40,14 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   @media (max-width: $breakpoint-md) {
     order: -1;
+  }
+
+  @include mobile {
+    margin-bottom: $spacing-4;
   }
 }
 
@@ -41,16 +56,33 @@
   height: auto;
   object-fit: cover;
   @include image-drop-shadow;
+
+  @include mobile {
+    width: 100%;
+    max-width: 420px;
+    max-height: 42vh;
+    object-fit: contain;
+  }
 }
 
 .about__text-wrapper {
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
+
+  @include mobile {
+    gap: $spacing-3;
+  }
 }
 
 .about__title {
   overflow: hidden; // For SplitText
+}
+
+.about__title.heading--section {
+  @include mobile {
+    margin-bottom: $spacing-2;
+  }
 }
 
 .about__description {
@@ -78,6 +110,11 @@
   margin-top: $spacing-4;
   padding-left: 0;
   list-style: none;
+
+  @include mobile {
+    gap: $spacing-3;
+    margin-top: $spacing-3;
+  }
 }
 
 .about__list-item {

@@ -62,6 +62,7 @@ export function useHeroAnimation(containerRef, coordinator = null) {
       const charS = self.selector('.hero__char--s span')
       const charT = self.selector('.hero__char--t span')
       const titleRow = self.selector('.hero__title-row')
+      const isMobile = window.innerWidth <= 767
 
       // --- Установка начального состояния (gsap.set) ---
 
@@ -110,7 +111,13 @@ export function useHeroAnimation(containerRef, coordinator = null) {
       if (isValidElement(modelFront))
         gsap.set(modelFront, { left: '50%', xPercent: -50, autoAlpha: 0 })
 
-      if (isValidElement(cta)) gsap.set(cta, { scale: 0.417, y: '0.4rem', autoAlpha: 0 })
+      if (isValidElement(cta)) {
+        if (isMobile) {
+          gsap.set(cta, { scale: 1, y: '0rem', autoAlpha: 1 })
+        } else {
+          gsap.set(cta, { scale: 0.417, y: '0.4rem', autoAlpha: 0 })
+        }
+      }
 
       // --- Animation Timeline ---
       const timeline = gsap.timeline()
@@ -367,7 +374,7 @@ export function useHeroAnimation(containerRef, coordinator = null) {
 
       // CTA
       timeline.addLabel('cta', 'swap_2_3+=0.5')
-      if (isValidElement(cta)) {
+      if (isValidElement(cta) && !isMobile) {
         timeline.to(
           cta,
           {

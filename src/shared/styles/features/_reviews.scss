@@ -4,11 +4,19 @@
   @include section-spacing;
   background-color: $color-neutral-gray-50;
   overflow: hidden;
+
+  @include mobile {
+    overflow: visible;
+  }
 }
 
 .reviews__title {
   text-align: center;
   margin-bottom: $spacing-8;
+
+  @include mobile {
+    margin-bottom: $spacing-6;
+  }
 }
 
 .reviews__grid {
@@ -22,6 +30,7 @@
 
   @include mobile {
     grid-template-columns: 1fr; // On mobile, maybe just one column or horizontal slider
+    gap: $spacing-4;
     height: auto;
     mask-image: none;
     overflow: visible;
@@ -34,7 +43,7 @@
   gap: $spacing-6;
 
   @media (max-width: $breakpoint-md) {
-    // Mobile fallback styles if needed, or keep vertical scroll
+    gap: $spacing-4;
   }
 }
 
@@ -46,6 +55,11 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+
+  @include mobile {
+    padding: $spacing-4;
+    border-radius: $border-radius-md;
+  }
 }
 
 .reviews__card-header {

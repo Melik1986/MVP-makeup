@@ -15,6 +15,14 @@
   }
 }
 
+.courses .courses__title.heading--section {
+  margin-bottom: $spacing-6;
+
+  @include mobile {
+    margin-bottom: $spacing-2;
+  }
+}
+
 .courses__stage {
   position: relative;
   width: 100%;
@@ -30,6 +38,7 @@
   border: 1px solid rgba($color-neutral-gray-800, 0.08);
 
   @include mobile {
+    height: 100svh;
     min-height: 560px;
     border-radius: $border-radius-md;
   }
@@ -45,7 +54,8 @@
   padding: $spacing-6;
 
   @include mobile {
-    padding: $spacing-4;
+    padding: $spacing-3;
+    padding-top: calc(#{$spacing-3} + 53px + env(safe-area-inset-top));
   }
 }
 
@@ -60,26 +70,20 @@
   position: absolute;
   width: min(92vw, 760px);
   height: min(68vh, 560px);
-  background: linear-gradient(
-    180deg,
-    rgba($color-neutral-white, 0.92) 0%,
-    $color-neutral-gray-50 100%
-  );
-  padding: $spacing-8;
+  background: $color-neutral-white; // Solid base to remove transparency
+  padding: $spacing-12;
+  padding-bottom: calc(#{$spacing-12} + 56px);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   border-radius: $border-radius-lg;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba($color-neutral-gray-800, 0.08);
   overflow: hidden;
+  isolation: isolate;
 
   &--dark {
-    background: linear-gradient(
-      180deg,
-      $color-bg-hero-gradient-start 0%,
-      $color-bg-hero-gradient-end 100%
-    );
+    background: #1a0406; // Solid dark base
     border-color: rgba($color-neutral-white, 0.18);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 
@@ -88,8 +92,27 @@
       color: rgba(255, 255, 255, 1) !important;
     }
 
+    .courses__card-subtitle,
     .text--body {
-      color: rgba(255, 255, 240, 0.6) !important;
+      color: rgba(255, 255, 240, 0.8) !important;
+    }
+
+    .courses__card-badge {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .courses__link-text {
+      color: #ffffff;
+    }
+
+    .courses__link-arrow {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+    }
+
+    .courses__decor-circle {
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     .courses__progress-line {
@@ -108,21 +131,190 @@
   @include tablet {
     width: min(92vw, 680px);
     height: min(66vh, 520px);
-    padding: $spacing-6;
+    padding: $spacing-8;
+    padding-bottom: calc(#{$spacing-8} + 52px);
   }
 
   @include mobile {
     width: calc(100% - #{$spacing-4 * 2});
     height: min(62vh, 480px);
-    padding: $spacing-5;
+    padding: $spacing-6;
+    padding-bottom: calc(#{$spacing-6} + 52px);
     border-radius: $border-radius-md;
   }
 }
 
-.courses__card-title {
-  margin-bottom: $spacing-4;
+.courses__card-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 
+.courses__card-texture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.courses__card-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 90%; // Reduced size as requested
+  width: auto;
+  object-fit: contain;
+  z-index: 2;
+  transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  transform-origin: bottom right;
+
+  @include mobile {
+    height: 75%;
+    right: -10%;
+  }
+}
+
+.courses__card:hover .courses__card-image {
+  transform: scale(1.05) translateX(-10px);
+}
+
+.courses__card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3; // Above image/texture for text readability
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.8) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.courses__card--dark .courses__card-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 4, 6, 0.95) 0%,
+    rgba(26, 4, 6, 0.8) 40%,
+    rgba(26, 4, 6, 0) 100%
+  );
+}
+
+.courses__card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+}
+
+.courses__card-badge {
+  padding: 8px 16px;
+  border: 1px solid rgba(51, 51, 51, 0.2);
+  border-radius: 100px;
+  font-family: $font-family-primary;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(51, 51, 51, 0.8);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+}
+
+.courses__card-index {
+  font-family: $font-family-secondary;
+  font-size: $font-size-2xl;
+  opacity: 0;
+  line-height: 1;
+}
+
+.courses__card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: $spacing-4;
+  max-width: 400px; // Contain text to the left
+  margin-top: auto;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+
+  @include mobile {
+    max-width: 100%;
+  }
+}
+
+.courses__card-title {
+  margin-bottom: $spacing-2;
+  font-size: clamp(#{$font-size-xl}, 6vw, #{$font-size-3xl});
+  line-height: $line-height-tight;
+  opacity: 0;
+}
+
+.courses__card-subtitle {
+  font-size: $font-size-lg;
+  opacity: 0;
+}
+
+.courses__card-action {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  margin-top: $spacing-4;
+  cursor: pointer;
+  opacity: 0;
+
+  &:hover .courses__link-arrow {
+    transform: translateX(5px);
+  }
+}
+
+.courses__link-text {
+  font-family: $font-family-primary;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.courses__link-arrow {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(51, 51, 51, 0.2);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+// Decor
+.courses__card-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.courses__decor-circle {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  border: 1px solid rgba(51, 51, 51, 0.2);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+// Progress
 .courses__progress {
   position: absolute;
   right: $spacing-6;
@@ -152,7 +344,7 @@
   overflow: hidden;
 
   @include mobile {
-    width: 110px;
+    width: 96px;
   }
 }
 
@@ -173,6 +365,11 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba($color-neutral-gray-800, 0.9);
+
+  @include mobile {
+    font-size: $font-size-xs;
+    letter-spacing: 0.16em;
+  }
 }
 
 .courses__progress-sep {
