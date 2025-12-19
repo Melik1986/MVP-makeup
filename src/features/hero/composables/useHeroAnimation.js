@@ -62,7 +62,6 @@ export function useHeroAnimation(containerRef, coordinator = null) {
       const charS = self.selector('.hero__char--s span')
       const charT = self.selector('.hero__char--t span')
       const titleRow = self.selector('.hero__title-row')
-      const isMobile = window.innerWidth <= 767
 
       // --- Установка начального состояния (gsap.set) ---
 
@@ -112,11 +111,7 @@ export function useHeroAnimation(containerRef, coordinator = null) {
         gsap.set(modelFront, { left: '50%', xPercent: -50, autoAlpha: 0 })
 
       if (isValidElement(cta)) {
-        if (isMobile) {
-          gsap.set(cta, { scale: 1, y: '0rem', autoAlpha: 1 })
-        } else {
-          gsap.set(cta, { scale: 0.417, y: '0.4rem', autoAlpha: 0 })
-        }
+        gsap.set(cta, { scale: 0.8, y: 20, autoAlpha: 0 })
       }
 
       // --- Animation Timeline ---
@@ -374,7 +369,7 @@ export function useHeroAnimation(containerRef, coordinator = null) {
 
       // CTA
       timeline.addLabel('cta', 'swap_2_3+=0.5')
-      if (isValidElement(cta) && !isMobile) {
+      if (isValidElement(cta)) {
         timeline.to(
           cta,
           {
@@ -406,7 +401,7 @@ export function useHeroAnimation(containerRef, coordinator = null) {
           top: 0,
           left: 0,
           width: '100%',
-          zIndex: 1
+          zIndex: 21
           // НЕ устанавливаем visibility/opacity/autoAlpha - координатор управляет этим
         })
         gsap.set(containerRef.value, {
@@ -452,7 +447,6 @@ export function useHeroAnimation(containerRef, coordinator = null) {
           self.selector('.hero__background'),
           self.selector('.hero__model'),
           self.selector('.hero__tags'),
-          self.selector('.hero__cta'),
           self.selector('.hero__title-left'),
           self.selector('.hero__title-right'),
           self.selector('.hero__headline-top-wrapper .text--subtitle') // Added subtitle to fade out
@@ -463,6 +457,20 @@ export function useHeroAnimation(containerRef, coordinator = null) {
             elementsToFade,
             {
               autoAlpha: 0,
+              duration: 0.3
+            },
+            0
+          )
+        }
+
+        // CTA exit animation
+        if (isValidElement(cta)) {
+          scrollTl.to(
+            cta,
+            {
+              autoAlpha: 0,
+              scale: 0.5,
+              y: -50,
               duration: 0.3
             },
             0

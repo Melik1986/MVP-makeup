@@ -3,6 +3,7 @@
     <div class="hero__background">
       <div class="hero__gradient"></div>
     </div>
+    <div class="hero__bokeh" aria-hidden="true"></div>
 
     <Container class="hero__container">
       <div class="hero__content">

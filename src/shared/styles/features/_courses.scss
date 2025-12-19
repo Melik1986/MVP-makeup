@@ -182,9 +182,9 @@
   transform-origin: bottom right;
 
   @include mobile {
-    height: 55%;
+    height: 90%;
     right: 0; // Better positioning
-    bottom: 5%;
+    bottom: 0%;
   }
 }
 
