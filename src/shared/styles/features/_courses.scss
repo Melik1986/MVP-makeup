@@ -76,8 +76,8 @@
 
 .courses__card {
   position: absolute;
-  width: min(92vw, 760px);
-  height: min(68vh, 560px);
+  width: min(92vw, 950px); // Adjusted for border-box
+  height: min(80vh, 800px); // Adjusted for border-box
   background: $color-neutral-white;
   padding: $spacing-12;
   padding-bottom: calc(#{$spacing-12} + 56px);
@@ -89,6 +89,7 @@
   border: 1px solid rgba($color-neutral-gray-800, 0.08);
   overflow: hidden;
   isolation: isolate;
+  box-sizing: border-box; // Fix: padding changes won't affect total size
 
   &--dark {
     background: #1a0406;
@@ -137,17 +138,17 @@
   }
 
   @include tablet {
-    width: min(94vw, 680px);
-    height: min(75vh, 520px);
+    width: min(94vw, 810px); // Adjusted for border-box
+    height: min(85vh, 700px); // Adjusted for border-box
     padding: $spacing-8;
     padding-bottom: calc(#{$spacing-8} + 52px);
   }
 
   @include mobile {
-    width: calc(100% - 164px); // Increased margin from edges
-    height: min(68vh, 480px); // Reverted height
-    padding: $spacing-8; // Increased internal padding
-    padding-bottom: calc(#{$spacing-8} + 60px);
+    width: calc(100% - 32px); // Fixed width independent of padding
+    height: min(80vh, 670px); // Adjusted for border-box
+    padding: 22px; // Reduced padding as requested for better content fit
+    padding-bottom: calc(#{$spacing-6} + 30px);
     border-radius: $border-radius-md;
   }
 }
@@ -176,6 +177,7 @@
   height: 90%;
   width: auto;
   object-fit: contain;
+  object-position: bottom right;
   z-index: 2;
   transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
   pointer-events: none;
@@ -188,9 +190,9 @@
   }
 }
 
-.courses__card:hover .courses__card-image {
-  transform: scale(1.05) translateX(-10px);
-}
+// .courses__card:hover .courses__card-image {
+//   transform: scale(1.05) translateX(-10px);
+// }
 
 .courses__card-overlay {
   position: absolute;
@@ -390,7 +392,7 @@
 
   @include mobile {
     right: $spacing-8; // More space from edge
-    bottom: $spacing-8; // More space from edge
+    bottom: 34px; // More space from edge
   }
 }
 
