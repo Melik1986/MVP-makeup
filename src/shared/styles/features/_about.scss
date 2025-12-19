@@ -58,6 +58,24 @@
   object-fit: cover;
   @include image-drop-shadow;
 
+  // Комплексная маска для растворения краев со всех сторон, где есть обрез.
+  // Это заставит drop-shadow игнорировать границы прямоугольного файла.
+  $mask-main: linear-gradient(to bottom, black calc(100% - 30px), transparent 100%);
+  $mask-side: linear-gradient(
+    to right,
+    transparent 0%,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  );
+
+  -webkit-mask-image: $mask-main, $mask-side;
+  mask-image: $mask-main, $mask-side;
+
+  // Пересекаем маски, чтобы прозрачность работала и снизу, и по бокам одновременно
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+
   @include mobile {
     width: 100%;
     max-width: 420px;
