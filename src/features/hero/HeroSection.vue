@@ -136,10 +136,9 @@
 </template>
 
 <script setup>
-import { inject, nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 import signatureSvg from '@shared/assets/icons/Olga_Pavilina.svg?raw'
-import { useLogger } from '@shared/libs/logger'
 import TextReveal from '@shared/ui/animation/TextReveal.vue'
 import Button from '@shared/ui/Button.vue'
 import Container from '@shared/ui/Container.vue'
@@ -148,34 +147,21 @@ import Text from '@shared/ui/Text.vue'
 
 import { useHeroAnimation } from './composables/useHeroAnimation'
 
-const logger = useLogger('HeroSection')
+const heroRef = ref(null)
+const { initAnimation } = useHeroAnimation(heroRef)
 
 const emit = defineEmits(['booking-click'])
-
-const heroRef = ref(null)
-const coordinator = inject('scrollCoordinator', null)
 
 const handleBookingClick = () => {
   emit('booking-click')
 }
 
-const { initAnimation } = useHeroAnimation(heroRef, coordinator)
+defineExpose({
+  initAnimation
+})
 
 onMounted(async () => {
   await nextTick()
-  const timeline = await initAnimation()
-
-  // Регистрируем hero timeline в координаторе
-  if (timeline && coordinator) {
-    coordinator.registerHeroTrigger(timeline)
-    // Синхронизируем после регистрации hero
-    coordinator.synchronize()
-  } else if (!timeline || !coordinator) {
-    logger.error('HeroSection: Cannot register hero trigger', {
-      hasTimeline: !!timeline,
-      hasCoordinator: !!coordinator
-    })
-  }
 })
 </script>
 

@@ -24,7 +24,8 @@ export function useAudienceAnimation(sectionRef, decorLeftRef, decorRightRef, ca
             trigger: sectionElement,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1
+            scrub: 1,
+            refreshPriority: -1 // Wait for Master Timeline
           }
         })
       }
@@ -36,7 +37,8 @@ export function useAudienceAnimation(sectionRef, decorLeftRef, decorRightRef, ca
             trigger: sectionElement,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1
+            scrub: 1,
+            refreshPriority: -1 // Wait for Master Timeline
           }
         })
       }
@@ -60,7 +62,8 @@ export function useAudienceAnimation(sectionRef, decorLeftRef, decorRightRef, ca
                 scrollTrigger: {
                   trigger: element,
                   start: 'top 80%',
-                  toggleActions: 'play none none none'
+                  toggleActions: 'play none none none',
+                  refreshPriority: -1 // Wait for Master Timeline
                 }
               }
             )

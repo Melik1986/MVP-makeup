@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import Heading from '@shared/ui/Heading.vue'
 import Image from '@shared/ui/Image.vue'
@@ -111,22 +111,13 @@ const courses = [
 ]
 
 const coursesRef = ref(null)
-const coordinator = inject('scrollCoordinator', null)
+const { initAnimation } = useCoursesAnimation(coursesRef)
 
-const scrollTriggerRef = useCoursesAnimation(coursesRef, coordinator)
-
-onMounted(() => {
-  watch(
-    scrollTriggerRef,
-    scrollTrigger => {
-      if (scrollTrigger && coordinator) {
-        coordinator.registerCoursesTrigger(scrollTrigger)
-        coordinator.synchronize()
-      }
-    },
-    { immediate: true }
-  )
+defineExpose({
+  initAnimation
 })
+
+onMounted(() => {})
 </script>
 
 <style scoped lang="scss">

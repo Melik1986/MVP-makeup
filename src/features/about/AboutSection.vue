@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import Container from '@shared/ui/Container.vue'
 import Heading from '@shared/ui/Heading.vue'
@@ -52,33 +52,14 @@ import Text from '@shared/ui/Text.vue'
 
 import { useAboutAnimation } from './composables/useAboutAnimation'
 
-type ScrollCoordinator = {
-  registerAboutCallbacks: (callbacks: { onShow: () => void; onHide: () => void }) => void
-}
-
 const aboutRef = ref<HTMLElement | null>(null)
-const { initAnimation, playAnimation, reverseAnimation } = useAboutAnimation(aboutRef)
-const coordinator = inject<ScrollCoordinator | null>('scrollCoordinator', null)
+const { initAnimation } = useAboutAnimation(aboutRef)
 
-onMounted(async () => {
-  // About сама управляет своими внутренними анимациями
-  await initAnimation()
-
-  // Регистрируем callbacks в координаторе - About сам запустит/остановит анимации
-  // Координатор только управляет visibility (autoAlpha), выступая в роли дирижёра
-  if (coordinator && typeof coordinator.registerAboutCallbacks === 'function') {
-    coordinator.registerAboutCallbacks({
-      onShow: () => {
-        // About стал видимым - запускаем внутренние анимации
-        playAnimation()
-      },
-      onHide: () => {
-        // About скрывается - реверс анимаций (скрытие текста и изображения)
-        reverseAnimation()
-      }
-    })
-  }
+defineExpose({
+  initAnimation
 })
+
+onMounted(async () => {})
 </script>
 
 <style scoped lang="scss">

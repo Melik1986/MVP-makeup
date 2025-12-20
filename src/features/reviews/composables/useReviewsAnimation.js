@@ -46,7 +46,8 @@ export function useReviewsAnimation(sectionRef) {
             trigger: sectionRef.value,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1 // Smooth scrub
+            scrub: 1,
+            refreshPriority: -1 // Wait for Master Timeline
           }
         })
       }
@@ -59,7 +60,8 @@ export function useReviewsAnimation(sectionRef) {
             trigger: sectionRef.value,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1
+            scrub: 1,
+            refreshPriority: -1 // Wait for Master Timeline
           }
         })
       }

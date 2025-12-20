@@ -14,20 +14,6 @@ export function useScrollCoordination() {
 
   onMounted(() => {
     logger.info('Initializing ScrollCoordinator')
-
-    // Координатор будет использоваться через методы:
-    // - coordinator.registerHeroTrigger(timeline)
-    // - coordinator.registerCoursesTrigger(scrollTrigger)
-    // - coordinator.scheduleAboutTransition(config)
-    // - coordinator.synchronize()
-    //
-    // Эти методы будут вызваны из соответствующих composables:
-    // - useHeroAnimation вернет timeline который нужно зарегистрировать
-    // - useCoursesAnimation зарегистрирует свой ScrollTrigger
-    // - useAboutAnimation или AboutSection настроит About transition
-
-    // Координатор готов к использованию
-    // Регистрация триггеров будет происходить после их создания
   })
 
   onUnmounted(() => {
@@ -35,6 +21,5 @@ export function useScrollCoordination() {
     coordinator.cleanup()
   })
 
-  // Экспортируем координатор для использования в других composables
   return coordinator
 }

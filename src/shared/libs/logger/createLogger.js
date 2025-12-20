@@ -9,7 +9,8 @@
  * @returns {object} Объект с методами логирования
  */
 export function createLogger(context, options = {}) {
-  const { enabled = import.meta.env.DEV, level = 'debug' } = options
+  // Отключено по умолчанию для чистоты production консоли
+  const { enabled = false, level = 'debug' } = options
 
   // Уровни логирования с приоритетами
   const levels = {

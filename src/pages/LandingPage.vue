@@ -1,11 +1,15 @@
 <template>
   <div class="landing-page">
     <Header />
-    <div class="hero-transition-wrapper">
-      <HeroSection @booking-click="openBookingModal" />
-      <AboutSection />
+
+    <!-- Master Canvas for unified animations -->
+    <div ref="masterContainerRef" class="master-scroll-container">
+      <HeroSection ref="heroSectionRef" @booking-click="openBookingModal" />
+      <AboutSection ref="aboutSectionRef" />
+      <CoursesSection ref="coursesSectionRef" />
     </div>
-    <CoursesSection />
+
+    <!-- Rest of the page in normal flow -->
     <ReviewsSection />
     <Divider />
     <AudienceSection @yes-click="openBookingModal" @booking-click="openBookingModal" />
@@ -39,6 +43,11 @@ import Header from '@widgets/Header.vue'
 import { useScrollCoordination } from './composables/useScrollCoordination'
 
 const isBookingModalOpen = ref(false)
+const masterContainerRef = ref(null)
+
+const heroSectionRef = ref(null)
+const aboutSectionRef = ref(null)
+const coursesSectionRef = ref(null)
 
 const openBookingModal = () => {
   isBookingModalOpen.value = true
@@ -48,23 +57,45 @@ const closeBookingModal = () => {
   isBookingModalOpen.value = false
 }
 
-// Инициализируем координатор и предоставляем его дочерним компонентам
 const coordinator = useScrollCoordination()
 provide('scrollCoordinator', coordinator)
 
-// Настраиваем About transition после монтирования всех секций
-onMounted(() => {
-  // Небольшая задержка для обеспечения что все секции смонтированы
-  setTimeout(() => {
-    const aboutSection = document.querySelector('.about')
-    if (aboutSection && coordinator) {
-      coordinator.scheduleAboutTransition({
-        aboutSection,
-        showAtProgress: 0.22, // На 18% раньше (было 0.4, теперь 0.22) - появляется когда буквы достигают большого размера
-        hideAtProgress: 0.95
-      })
-    }
-  }, 100)
+onMounted(async () => {
+  // 1. Initialize Master Timeline on the container
+  coordinator.initMasterTimeline(masterContainerRef.value, {
+    end: '+=8000'
+  })
+
+  // 2. Request internal timelines from sections
+  // Using Promise.all to ensure all internal logic is ready
+  const [heroTls, aboutTl, coursesTl] = await Promise.all([
+    heroSectionRef.value.initAnimation(),
+    aboutSectionRef.value.initAnimation(),
+    coursesSectionRef.value.initAnimation()
+  ])
+
+  // 3. Inject timelines into Master Conductor with absolute positions (labels)
+  const masterTl = coordinator.getMasterTimeline()
+
+  // Intro (starts immediately on load)
+  if (heroTls?.introTl) {
+    heroTls.introTl.play()
+  }
+
+  // SCRUBBED SEQUENCE:
+  // Label "hero-zoom" at 0
+  coordinator.injectTimeline('hero-zoom', heroTls?.portalTl, 0)
+
+  // About reveal transition
+  masterTl.to('.about', { autoAlpha: 1, duration: 0.1 }, 0.25)
+  coordinator.injectTimeline('about-reveal', aboutTl, 0.25)
+
+  // Courses reveal transition
+  masterTl.to('.courses', { autoAlpha: 1, duration: 0.1 }, 0.6)
+  coordinator.injectTimeline('courses-reveal', coursesTl, 0.6)
+
+  // 4. Set final sync
+  coordinator.synchronize()
 })
 </script>
 
