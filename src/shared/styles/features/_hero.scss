@@ -9,6 +9,11 @@
   overflow: hidden;
   padding-top: $spacing-10;
 
+  @include tablet {
+    min-height: 100vh;
+    padding-top: $spacing-8;
+  }
+
   @include mobile {
     height: 100svh;
     min-height: 100svh;
@@ -82,6 +87,11 @@
   position: relative;
   padding-bottom: $spacing-6;
 
+  @include tablet {
+    min-height: calc(100vh - #{$spacing-8});
+    padding-bottom: $spacing-4;
+  }
+
   @include mobile {
     height: 100%;
     min-height: 0;
@@ -137,6 +147,10 @@
   text-align: center;
   margin: $spacing-8 0;
 
+  @include tablet {
+    margin: $spacing-4 0 34px 0;
+  }
+
   @include mobile {
     margin: $spacing-3 0;
   }
@@ -162,9 +176,13 @@
 .hero__title-block {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
+  align-items: end;
   position: relative;
   @include responsive-gap($spacing-4, $spacing-6, $spacing-4);
+
+  @include tablet {
+    gap: 8px;
+  }
 
   @media (max-width: $breakpoint-lg) {
     grid-template-columns: 1fr;
@@ -282,7 +300,12 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-  @include responsive-gap($spacing-8, $spacing-12, 8.75rem);
+  @include responsive-gap($spacing-8, $spacing-12, 0px);
+
+  @include tablet {
+    gap: 0px;
+    margin-top: -22px;
+  }
 
   @media (max-width: $breakpoint-lg) {
     text-align: center;
@@ -290,6 +313,12 @@
 
   @include mobile {
     gap: $spacing-4;
+  }
+}
+
+.hero__title-left {
+  @include tablet {
+    margin-top: -38px;
   }
 }
 
@@ -353,14 +382,22 @@
   margin-top: $spacing-8;
   z-index: 25; // Above bokeh layer to stay sharp
   position: relative;
+  display: flex;
+  justify-content: center;
+
+  @include tablet {
+    margin-top: 0px;
+  }
 
   @include mobile {
     position: absolute;
-    left: 50%;
+    left: 0;
+    right: 0;
     bottom: calc(20px + env(safe-area-inset-bottom));
-    transform: translateX(-50%, -50%);
     width: calc(100% - #{$spacing-4 * 2});
     max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 0;
   }
 }

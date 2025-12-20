@@ -58,12 +58,12 @@
   align-items: center;
   padding: $spacing-6;
   box-sizing: border-box;
-  gap: $spacing-6;
+  gap: 8px;
 
   @include mobile {
     padding: 0; // Remove horizontal padding to allow 100% width
     padding-top: calc(#{$spacing-4} + 20px + env(safe-area-inset-top));
-    gap: $spacing-4;
+    gap: 2px;
   }
 }
 
@@ -142,7 +142,7 @@
 
   @include tablet {
     width: min(94vw, 810px); // Adjusted for border-box
-    height: min(85vh, 700px); // Adjusted for border-box
+    height: min(85vh, 670px); // Adjusted for border-box
     padding: $spacing-8;
     padding-bottom: calc(#{$spacing-8} + 52px);
   }
