@@ -15,7 +15,7 @@
   right: -180px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
 
   @include tablet {
@@ -53,13 +53,25 @@
   flex-direction: column;
   gap: $spacing-4;
   position: relative;
-  z-index: 2;
 }
 
 .booking-form__field {
   display: flex;
   flex-direction: column;
   gap: $spacing-2;
+  position: relative;
+}
+
+// Первый инпут (Имя) - сверху декоративного элемента
+.booking-form__field:first-child {
+  position: relative;
+  z-index: 3;
+}
+
+// Второй инпут (Телефон) - за декоративным элементом
+.booking-form__field:nth-child(2) {
+  position: relative;
+  z-index: 1;
 }
 
 .booking-form__label {
@@ -73,6 +85,7 @@
 .booking-form__input,
 .booking-form__textarea {
   width: 100%;
+  max-width: 100%;
   padding: $spacing-2 $spacing-3;
   font-size: $font-size-base;
   font-family: $font-family-body;
@@ -81,6 +94,7 @@
   border: 2px solid $color-neutral-gray-200;
   border-radius: $border-radius-md;
   transition: $transition-default;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -89,6 +103,12 @@
 
   &::placeholder {
     color: $color-neutral-gray-200;
+  }
+
+  // Для экранов до 480px убираем фиксированную ширину
+  @media (max-width: 480px) {
+    width: 100%;
+    max-width: 100%;
   }
 }
 

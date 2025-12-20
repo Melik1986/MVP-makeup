@@ -68,7 +68,7 @@
 .courses__cards {
   position: relative;
   width: 100%;
-  flex: 1;
+  flex: 0.98;
   min-height: 0;
   display: flex;
   justify-content: center;
@@ -79,7 +79,7 @@
   width: min(92vw, 950px); // Adjusted for border-box
   height: min(80vh, 800px); // Adjusted for border-box
   background: $color-neutral-white;
-  padding: $spacing-12;
+  padding: 36px 56px;
   padding-bottom: calc(#{$spacing-12} + 56px);
   display: flex;
   flex-direction: column;

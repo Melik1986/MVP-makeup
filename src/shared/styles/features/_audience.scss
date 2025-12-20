@@ -40,13 +40,33 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   @include responsive-gap($spacing-4, $spacing-4, $spacing-6);
 
+  @include tablet {
+    position: relative;
+    grid-template-columns: 1fr 1fr;
+  }
+
   @include mobile {
     grid-template-columns: 1fr;
+    position: relative;
   }
 }
 
 .audience-section__card {
   opacity: 0;
+}
+
+// Выравнивание двух последних карточек (audience-3 и audience-4) по правому краю на мобильных
+@include mobile {
+  .audience-section__card:nth-child(3),
+  .audience-section__card:nth-child(4) {
+    justify-self: end;
+    align-items: flex-end;
+    text-align: right;
+
+    .audience-card__divider {
+      margin-left: auto;
+    }
+  }
 }
 
 .audience-section__decorative-left,
@@ -65,6 +85,68 @@
   }
 }
 
+// Позиционирование декоративных элементов на мобильных и планшетах
+// На мобильных/планшетах grid одноколоночный, поэтому позиционируем относительно .audience-section__content
+@include tablet {
+  .audience-section__decorative-left {
+    position: absolute;
+    // Позиционируем рядом с первой карточкой (audience-1.jpg)
+    // Выравниваем по центру image-wrapper первой карточки (120px / 2 = 60px от верха карточки)
+    // cards начинается после decorative-left в DOM, поэтому top = 60px (выравнивание по центру изображения)
+    top: 60px;
+    // Размещаем справа от первой карточки
+    // Используем приблизительную ширину карточки на планшете (около 300-400px) + отступ
+    left: 226px;
+    width: auto;
+    height: auto;
+    z-index: 1;
+  }
+
+  .audience-section__decorative-right {
+    position: absolute;
+    // Позиционируем рядом с третьей карточкой (audience-3.jpg)
+    // Примерная высота двух карточек + gap: ~350px (карточка) + 24px (gap) + ~350px (карточка) = ~724px
+    // Плюс выравнивание по центру изображения третьей карточки (60px от верха карточки)
+    top: 574px;
+    // Размещаем слева от третьей карточки
+    right: 500px;
+    width: auto;
+    height: auto;
+    z-index: 1;
+  }
+}
+
+@include mobile {
+  .audience-section__decorative-left {
+    position: absolute;
+    // Позиционируем рядом с первой карточкой (audience-1.jpg)
+    top: 20px;
+    // На мобильных карточки занимают почти всю ширину, размещаем справа от карточки
+    left: calc(100% - 108px - 16px);
+    width: auto;
+    height: auto;
+    z-index: 1;
+  }
+
+  .audience-section__decorative-right {
+    position: absolute;
+    // Позиционируем рядом с третьей карточкой (audience-3.jpg)
+    top: 414px;
+    // Размещаем слева от третьей карточки
+    right: calc(100% - 108px - 496px);
+    width: auto;
+    height: auto;
+    z-index: 1;
+  }
+
+  @media (max-width: 680px) {
+    .audience-section__decorative-right {
+      top: 454px;
+      right: 109px;
+    }
+  }
+}
+
 .audience-section__decoration {
   max-width: 150px;
   height: auto;
@@ -76,6 +158,27 @@
 
   @include mobile {
     max-width: 88px;
+  }
+}
+
+// Размеры декоративных элементов для мобильных/планшетов (когда применяется позиционирование)
+@include tablet {
+  .audience-section__decorative-left .audience-section__decoration,
+  .audience-section__decorative-right .audience-section__decoration {
+    max-width: 108px;
+    height: 140px;
+    width: auto;
+    object-fit: contain;
+  }
+}
+
+@include mobile {
+  .audience-section__decorative-left .audience-section__decoration,
+  .audience-section__decorative-right .audience-section__decoration {
+    max-width: 108px;
+    height: 140px;
+    width: auto;
+    object-fit: contain;
   }
 }
 

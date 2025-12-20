@@ -22,7 +22,6 @@ const containerClass = computed(() => ({
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
   max-width: $container-max-width;
   margin: 0 auto;
   padding: 0 $spacing-4;
