@@ -49,52 +49,64 @@ export function useCoursesAnimation(sectionRef) {
         gsap.set(progressFills, { scaleX: 0, transformOrigin: '0% 50%' })
       }
 
-      const animateCardContentIn = card => {
-        const elements = card.querySelectorAll(
-          '.courses__card-header, .courses__card-content, .courses__card-badge, .courses__card-index, .courses__card-title, .courses__card-subtitle, .courses__card-action, .courses__decor-circle'
-        )
-        if (card.dataset.contentVisible === 'true') return
-        gsap.to(elements, {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.05,
-          ease: 'power3.out',
-          overwrite: 'auto'
-        })
-        card.dataset.contentVisible = 'true'
-      }
-
       coursesTimeline = gsap.timeline({
         onUpdate() {
           const progress = this.progress()
-          if (progressFills.length > 0) gsap.set(progressFills, { scaleX: progress })
+          if (progressFills.length > 0) {
+            gsap.set(progressFills, { scaleX: progress })
+          }
+
+          // Обновляем активный класс для индикаторов и т.д.
           const totalCards = cards.length
-          const segment = 1 / (totalCards - 1)
+          const segment = 1 / (totalCards - 1 || 1)
           const index = Math.round(progress / segment)
-          const safeIndex = Math.min(Math.max(0, index), totalCards - 1)
           cards.forEach((card, idx) => {
-            if (idx === safeIndex) {
-              card.classList.add('is-active')
-              animateCardContentIn(card)
-            } else {
-              card.classList.remove('is-active')
-            }
+            if (idx === index) card.classList.add('is-active')
+            else card.classList.remove('is-active')
           })
         }
       })
 
-      animateCardContentIn(cards[0])
+      // Добавляем начальную анимацию первой карточки в таймлайн
+      const firstCardElements = cards[0].querySelectorAll(
+        '.courses__card-header, .courses__card-content, .courses__card-badge, .courses__card-index, .courses__card-title, .courses__card-subtitle, .courses__card-action, .courses__decor-circle'
+      )
+      coursesTimeline.to(
+        firstCardElements,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.02,
+          ease: 'power2.out'
+        },
+        0
+      )
 
       for (let i = 1; i < cards.length; i += 1) {
         const prevCard = cards[i - 1]
         const currentCard = cards[i]
-        coursesTimeline.to(
-          prevCard,
-          { scale: 0.92, opacity: 0.55, duration: 1 },
-          coursesTimeline.duration()
+        const currentElements = currentCard.querySelectorAll(
+          '.courses__card-header, .courses__card-content, .courses__card-badge, .courses__card-index, .courses__card-title, .courses__card-subtitle, .courses__card-action, .courses__decor-circle'
         )
-        coursesTimeline.to(currentCard, { xPercent: baseXPercent, duration: 1 }, '<')
+
+        const startTime = coursesTimeline.duration()
+
+        coursesTimeline.to(prevCard, { scale: 0.92, opacity: 0.55, duration: 1 }, startTime)
+        coursesTimeline.to(currentCard, { xPercent: baseXPercent, duration: 1 }, startTime)
+
+        // Анимация контента текущей карточки ПРИ НАЕЗДЕ
+        coursesTimeline.to(
+          currentElements,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.03,
+            ease: 'power2.out'
+          },
+          startTime + 0.3
+        )
       }
     }, sectionRef.value)
 

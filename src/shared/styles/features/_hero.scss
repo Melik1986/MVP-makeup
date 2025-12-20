@@ -272,6 +272,7 @@
 .hero__title-char-container span {
   display: inline-block;
   transform: translate3d(0, 0, 0);
+  will-change: transform, opacity; // GPU-фикс мерцания
   font-size: $font-size-hero;
   line-height: $line-height-tight;
   letter-spacing: 0.03em; // Tightened to allow larger font size

@@ -24,6 +24,9 @@ export function createScrollCoordinator() {
     if (masterTimeline) {
       masterTimeline.kill()
     }
+    if (masterScrollTrigger) {
+      masterScrollTrigger.kill()
+    }
 
     const {
       start = 'top top',

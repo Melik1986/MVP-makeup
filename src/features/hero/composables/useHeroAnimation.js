@@ -10,11 +10,12 @@ export function useHeroAnimation(containerRef) {
   let ctx
 
   const initAnimation = async () => {
-    // eslint-disable-next-line no-restricted-globals
-    if (typeof window === 'undefined' || !containerRef.value) return
+    if (typeof window === 'undefined' || !containerRef.value) {
+      return
+    }
 
     if (document.fonts) {
-      await document.fonts.ready
+      await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 500))])
     }
 
     const { CustomEase } = await import('@shared/libs/gsap/CustomEase')
@@ -38,6 +39,10 @@ export function useHeroAnimation(containerRef) {
 
       // Селекторы через gsap.utils.selector
       const q = gsap.utils.selector(containerRef.value)
+
+      // Устранение мерцания на уровне контейнера
+      gsap.set(containerRef.value, { force3D: true, backfaceVisibility: 'hidden' })
+
       const startDateContent = q('.hero__tag--start .hero__tag-content')
       const formatContent = q('.hero__tag--format .hero__tag-content')
       const headlineWrapper = q('.hero__headline-top-wrapper')
@@ -64,6 +69,15 @@ export function useHeroAnimation(containerRef) {
       if (isValidElement(startDateContent)) gsap.set(startDateContent, { y: -50, autoAlpha: 0 })
       if (isValidElement(formatContent)) gsap.set(formatContent, { y: -50, autoAlpha: 0 })
       if (isValidElement(headlineWrapper)) gsap.set(headlineWrapper, { y: '0.5rem', autoAlpha: 0 })
+
+      if (isValidElement(titleRow)) gsap.set(titleRow, { force3D: true })
+
+      // HEADER TEXT REVEAL SETUP
+      const headerTextInit = document.querySelector('.header .text--subtitle')
+      if (headerTextInit) {
+        gsap.set(headerTextInit, { yPercent: 100, autoAlpha: 0 })
+        // Добавим в интро
+      }
       if (isValidElement(charV)) gsap.set(charV, { x: '2.7rem', autoAlpha: 0 })
       if (isValidElement(charI)) gsap.set(charI, { x: '-2rem', autoAlpha: 0 })
       if (isValidElement(charZ)) gsap.set(charZ, { x: '2.1rem', autoAlpha: 0 })
@@ -96,8 +110,21 @@ export function useHeroAnimation(containerRef) {
       }
 
       // 1. Intro Timeline (Auto-play)
-      introTl = gsap.timeline()
+      introTl = gsap.timeline({
+        onComplete: () => {
+          // Гарантируем корректный стейт после завершения авто-анимации
+          gsap.set(
+            [startDateContent, formatContent, headlineWrapper, titleLeftWrapper, titleRightWrapper],
+            { clearProps: 'transform' }
+          )
+        }
+      })
       introTl.addLabel('start', 0)
+
+      // Сразу показываем фоновые элементы если они есть
+      const bg = q('.hero__background')
+      if (isValidElement(bg)) gsap.set(bg, { autoAlpha: 1 })
+
       if (isValidElement(modelBack)) {
         introTl.to(
           modelBack,
@@ -107,6 +134,15 @@ export function useHeroAnimation(containerRef) {
             ease: 'power4.inOut'
           },
           'start'
+        )
+      }
+
+      const headerTextEl = document.querySelector('.header .text--subtitle')
+      if (headerTextEl) {
+        introTl.to(
+          headerTextEl,
+          { yPercent: 0, autoAlpha: 1, duration: 1, ease: cgEase },
+          'start+=0.2'
         )
       }
       if (isValidElement(startDateContent)) {
@@ -163,6 +199,23 @@ export function useHeroAnimation(containerRef) {
           { x: 0, autoAlpha: 1, duration: 1.0, ease: 'power2.inOut' },
           'swap_1_2'
         )
+      }
+
+      // Показываем Headline
+      if (isValidElement(headlineWrapper)) {
+        introTl.to(headlineWrapper, { y: 0, autoAlpha: 1, duration: 1, ease: cgEase }, 'swap_1_2')
+      }
+
+      // АНИМАЦИЯ ТЕГОВ (Start Date, Format)
+      if (isValidElement(startDateContent)) {
+        introTl.to(
+          startDateContent,
+          { y: 0, autoAlpha: 1, duration: 1, ease: cgEase },
+          'start+=0.3'
+        )
+      }
+      if (isValidElement(formatContent)) {
+        introTl.to(formatContent, { y: 0, autoAlpha: 1, duration: 1, ease: cgEase }, 'start+=0.4')
       }
       introTl.addLabel('headline', 'swap_1_2+=0.3')
       if (isValidElement(headlineWrapper)) {
@@ -226,41 +279,73 @@ export function useHeroAnimation(containerRef) {
         portalTl.to(
           titleRow,
           {
-            scale: 300,
+            scale: 80,
             transformOrigin: '50% 55%',
             ease: 'power2.inOut',
-            duration: 1
+            duration: 1,
+            force3D: true,
+            immediateRender: false,
+            // Добавляем специфический фикс для рендеринга при реверсе
+            onReverseComplete: () => {
+              gsap.set(titleRow, { scale: 1, clearProps: 'transform' })
+            }
           },
           0
         )
       }
+
       const elementsToFade = [
         q('.hero__background'),
         q('.hero__model'),
         q('.hero__tags'),
         q('.hero__title-left'),
         q('.hero__title-right'),
-        q('.hero__headline-top-wrapper .text--subtitle'),
+        q('.hero__headline-top-wrapper'),
         cta
       ].filter(el => isValidElement(el))
 
       if (elementsToFade.length > 0) {
-        portalTl.to(elementsToFade, { autoAlpha: 0, duration: 0.3 }, 0)
+        portalTl.to(
+          elementsToFade,
+          {
+            autoAlpha: 0,
+            duration: 0.6, // Медленнее, чтобы не было "бликов"
+            immediateRender: false,
+            overwrite: 'auto' // Предотвращение конфликтов с intro
+          },
+          0
+        )
       }
 
+      // Убираем секцию целиком только в самом конце зума
       portalTl.to(
         containerRef.value,
         {
           autoAlpha: 0,
-          duration: 0.1,
+          duration: 0.3,
+          immediateRender: false,
           onComplete: () => {
-            if (containerRef.value) gsap.set(containerRef.value, { display: 'none' })
+            if (containerRef.value)
+              gsap.set(containerRef.value, { pointerEvents: 'none', visibility: 'hidden' })
           },
           onReverseComplete: () => {
-            if (containerRef.value) gsap.set(containerRef.value, { display: 'flex' })
+            if (containerRef.value) {
+              gsap.set(containerRef.value, {
+                pointerEvents: 'auto',
+                visibility: 'visible',
+                opacity: 1
+              })
+              // Глубокий сброс при реверсе для устранения фантомных букв
+              const tr = containerRef.value.querySelector('.hero__title-row')
+              if (tr) {
+                gsap.set(tr, { scale: 1, clearProps: 'all', force3D: true })
+                const spans = tr.querySelectorAll('span')
+                gsap.set(spans, { clearProps: 'all', opacity: 1 })
+              }
+            }
           }
         },
-        0.9
+        0.7 // Даем время на нахлест с About
       )
     }, containerRef.value)
 

@@ -11,7 +11,9 @@ export function useAboutAnimation(aboutRef) {
   const initAnimation = async () => {
     if (!aboutRef.value) return null
 
-    await document.fonts.ready
+    if (document.fonts) {
+      await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 500))])
+    }
 
     const { CustomEase } = await import('@shared/libs/gsap/CustomEase')
     gsap.registerPlugin(CustomEase)
@@ -88,16 +90,8 @@ export function useAboutAnimation(aboutRef) {
         )
       }
 
-      // Exit animation (fading out for Courses)
-      aboutTimeline.to(
-        aboutRef.value,
-        {
-          autoAlpha: 0,
-          duration: 0.3,
-          ease: 'power2.inOut'
-        },
-        '+=0.5'
-      )
+      // УДАЛЕНО: Выходная анимация About больше не нужна внутри этой секции,
+      // так как Courses наезжает сверху в Master Timeline
     }, aboutRef.value)
 
     return aboutTimeline
