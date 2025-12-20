@@ -58,20 +58,23 @@
   align-items: center;
   padding: $spacing-6;
   box-sizing: border-box;
+  gap: $spacing-6;
 
   @include mobile {
     padding: 0; // Remove horizontal padding to allow 100% width
     padding-top: calc(#{$spacing-4} + 20px + env(safe-area-inset-top));
+    gap: $spacing-4;
   }
 }
 
 .courses__cards {
   position: relative;
   width: 100%;
-  flex: 0.98;
+  flex: 1;
   min-height: 0;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .courses__card {

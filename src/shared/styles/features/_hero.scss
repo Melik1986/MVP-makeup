@@ -357,8 +357,8 @@
   @include mobile {
     position: absolute;
     left: 50%;
-    bottom: calc(100px + env(safe-area-inset-bottom));
-    transform: translateX(-50%);
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    transform: translateX(-50%, -50%);
     width: calc(100% - #{$spacing-4 * 2});
     max-width: 420px;
     margin-top: 0;
