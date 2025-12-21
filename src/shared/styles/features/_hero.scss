@@ -54,6 +54,11 @@
     backface-visibility: hidden;
   }
 
+  @include tablet {
+    min-height: 100vh;
+    padding-top: $spacing-8;
+  }
+
   @include mobile {
     height: 100svh;
     min-height: 100svh;
