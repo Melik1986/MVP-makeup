@@ -80,11 +80,12 @@ onMounted(async () => {
 
   // 1. Initialize Master Timeline
   coordinator.initMasterTimeline(masterContainerRef.value, {
-    end: '+=10000', // Больше пространства для маневра
+    end: '+=3000', // Оптимальная плотность для мгновенного отклика
     onUpdate: self => {
-      // Блокируем авто-анимацию при скролле
-      if (self.progress > 0.001 && heroTls?.introTl?.isActive()) {
-        heroTls.introTl.pause()
+      // КРИТИЧНО: Если пользователь начал скроллить, завершаем авто-анимацию
+      // чтобы она не конфликтовала с порталом.
+      if (self.progress > 0.001 && heroTls?.introTl && !heroTls.introTl.paused()) {
+        heroTls.introTl.progress(1).pause()
       }
     }
   })
@@ -93,28 +94,34 @@ onMounted(async () => {
   try {
     heroTls = await heroSectionRef.value.initAnimation()
 
-    // СРАЗУ снимаем лоадер и запускаем Intro для Hero
-    isLoading.value = false
+    // СИНХРОНИЗАЦИЯ: Запускаем Hero Intro СРАЗУ
     if (heroTls?.introTl) {
       heroTls.introTl.play()
     }
 
+    // Прелоадер уходит только когда анимация Hero уже началась
+    // Это убирает "темный экран" полностью
+    requestAnimationFrame(() => {
+      isLoading.value = false
+    })
+
     // 3. Parallel Load Others (Background)
-    const [aboutTl, coursesTl] = await Promise.all([
-      aboutSectionRef.value.initAnimation(),
-      coursesSectionRef.value.initAnimation()
-    ])
+    const aboutTl = aboutSectionRef.value.initAnimation()
+    const coursesTl = coursesSectionRef.value.initAnimation()
 
     const masterTl = coordinator.getMasterTimeline()
 
     // -------------------------------------------------------------------------
-    // MASTER SEQUENCE (Unified Flow)
+    // MASTER SEQUENCE (Unified Flow - Flat Filmstrip Architecture)
     // -------------------------------------------------------------------------
     masterTl.addLabel('hero-start', 0)
-    masterTl.addLabel('portal-open', 0.1)
-    masterTl.addLabel('about-active', 1.0)
-    masterTl.addLabel('courses-slide', 2.8)
-    masterTl.addLabel('courses-active', 4.0)
+    masterTl.addLabel('portal-open', 0.05)
+    masterTl.addLabel('about-active', 0.6) // Увеличили нахлест для плавности
+    masterTl.addLabel('courses-slide', 1.2)
+    masterTl.addLabel('courses-active', 2.2)
+
+    // Гарантируем скрытие About на старте
+    gsap.set('.about', { autoAlpha: 0, visibility: 'hidden', pointerEvents: 'none' })
 
     // 1. Header (Fade in)
     masterTl.from(
@@ -122,49 +129,55 @@ onMounted(async () => {
       {
         yPercent: -100,
         autoAlpha: 0,
-        duration: 0.8,
-        ease: 'expo.out'
+        duration: 0.4,
+        ease: 'power2.out'
       },
       'hero-start'
     )
 
-    // 2. Portal (Overlap Hero Zoom with About Reveal)
-    if (heroTls?.portalTl) {
-      coordinator.injectTimeline(null, heroTls.portalTl, 'portal-open')
-    }
+    // 2. Прямая инжекция Hero Portal в мастер-ленту
+    heroSectionRef.value.injectHeroPortal(masterTl, 'portal-open')
 
-    // ВАЖНО: About начинает проявляться СРАЗУ с началом портала
-    masterTl.to(
+    // 3. About Reveal (Синхронизировано с порталом)
+    masterTl.fromTo(
       '.about',
       {
+        autoAlpha: 0,
+        scale: 0.9,
+        yPercent: 10
+      },
+      {
         autoAlpha: 1,
+        scale: 1,
+        yPercent: 0,
         pointerEvents: 'auto',
-        duration: 0.6, // Ускоряем проявление контейнера
-        ease: 'power1.inOut',
+        visibility: 'visible',
+        duration: 0.6,
+        ease: 'power2.out',
         immediateRender: false
       },
-      'portal-open'
+      'portal-open+=0.2' // Начинаем проявлять чуть позже начала зума
     )
 
-    // Внутренняя анимация About начинается ПОЧТИ СРАЗУ (нахлест 95%)
-    coordinator.injectTimeline(null, aboutTl, 'portal-open+=0.05')
+    // Внутренняя анимация About
+    coordinator.injectTimeline(null, aboutTl, 'about-active')
 
-    // 3. Courses (Overlap with About)
-    gsap.set('.courses', { yPercent: 100, autoAlpha: 1 })
+    // 4. Courses (Overlap with About)
+    gsap.set('.courses', { yPercent: 100, autoAlpha: 1, visibility: 'visible' })
 
     masterTl.to(
       '.courses',
       {
         yPercent: 0,
         pointerEvents: 'auto',
-        duration: 1.8,
-        ease: 'expo.inOut',
+        duration: 0.7,
+        ease: 'power2.inOut',
         immediateRender: false
       },
       'courses-slide'
     )
 
-    coordinator.injectTimeline(null, coursesTl, 'courses-slide+=0.8')
+    coordinator.injectTimeline(null, coursesTl, 'courses-slide+=0.05')
 
     coordinator.synchronize()
   } catch (error) {
@@ -231,7 +244,7 @@ onMounted(async () => {
 }
 
 .fade-leave-active {
-  transition: opacity 0.8s ease;
+  transition: opacity 0.4s ease-in;
 }
 .fade-leave-to {
   opacity: 0;

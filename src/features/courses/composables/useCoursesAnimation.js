@@ -4,7 +4,7 @@ import { onUnmounted } from 'vue'
 export function useCoursesAnimation(sectionRef) {
   let ctx = null
 
-  const initAnimation = async () => {
+  const initAnimation = () => {
     if (!sectionRef.value) return null
 
     let coursesTimeline = null

@@ -148,7 +148,7 @@ import Text from '@shared/ui/Text.vue'
 import { useHeroAnimation } from './composables/useHeroAnimation'
 
 const heroRef = ref(null)
-const { initAnimation } = useHeroAnimation(heroRef)
+const { initAnimation, injectHeroPortal } = useHeroAnimation(heroRef)
 
 const emit = defineEmits(['booking-click'])
 
@@ -157,7 +157,8 @@ const handleBookingClick = () => {
 }
 
 defineExpose({
-  initAnimation
+  initAnimation,
+  injectHeroPortal
 })
 
 onMounted(async () => {

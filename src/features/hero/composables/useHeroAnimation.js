@@ -2,24 +2,50 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { onUnmounted } from 'vue'
 
+import { CustomEase } from '@shared/libs/gsap/CustomEase'
 import { SplitText } from '@shared/libs/gsap/SplitText'
 
-gsap.registerPlugin(ScrollTrigger, SplitText)
+gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase)
 
 export function useHeroAnimation(containerRef) {
   let ctx
 
+  /**
+   * Инициализация входной анимации (Intro).
+   * Эти анимации проигрываются один раз при загрузке страницы.
+   */
   const initAnimation = async () => {
     if (typeof window === 'undefined' || !containerRef.value) {
-      return
+      return { introTl: null }
     }
 
+    const q = gsap.utils.selector(containerRef.value)
+    const container = containerRef.value
+
+    // 1. МГНОВЕННЫЙ SETUP (Синхронно)
+    // Показываем контейнер сразу, чтобы не было "темного экрана"
+    gsap.set(container, { autoAlpha: 1, visibility: 'visible' })
+
+    // Ожидание шрифтов для корректных замеров SplitText
     if (document.fonts) {
       await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 500))])
     }
 
-    const { CustomEase } = await import('@shared/libs/gsap/CustomEase')
-    gsap.registerPlugin(CustomEase)
+    ctx = gsap.context(() => {
+      // Стабилизация GPU слоев
+      gsap.set([container, q('.hero__title-row'), q('.hero__model-container')], {
+        force3D: true,
+        backfaceVisibility: 'hidden',
+        transformStyle: 'preserve-3d',
+        z: 0.1
+      })
+
+      // Начальное состояние моделей
+      const modelBackEl = q('.hero__model-back')
+      const otherModels = q('.hero__model-side, .hero__model-front')
+      gsap.set(modelBackEl, { autoAlpha: 1, visibility: 'visible' })
+      gsap.set(otherModels, { autoAlpha: 0, visibility: 'hidden' })
+    }, containerRef.value)
 
     const cgEase = CustomEase.create(
       'cg-ease',
@@ -27,107 +53,40 @@ export function useHeroAnimation(containerRef) {
     )
 
     let introTl = null
-    let portalTl = null
 
-    ctx = gsap.context(() => {
-      // Helper для валидации элементов
-      const isValidElement = el => {
-        if (!el) return false
-        if (Array.isArray(el) || el instanceof NodeList) return el.length > 0
-        return el.nodeType === 1
-      }
-
-      // Селекторы через gsap.utils.selector
-      const q = gsap.utils.selector(containerRef.value)
-
-      // Устранение мерцания на уровне контейнера
-      gsap.set(containerRef.value, { force3D: true, backfaceVisibility: 'hidden' })
-
+    ctx.add(() => {
       const startDateContent = q('.hero__tag--start .hero__tag-content')
       const formatContent = q('.hero__tag--format .hero__tag-content')
       const headlineWrapper = q('.hero__headline-top-wrapper')
       const titleLeftWrapper = q('.hero__title-left .hero__duration-wrapper')
       const titleRightWrapper = q('.hero__title-right .hero__level-wrapper')
       const mentorshipWords = q('.hero__mentorship-wrapper .text-reveal__word')
-      const signature = q('.hero__signature')
       const earningsWords = q('.hero__earnings-wrapper .text-reveal__word')
       const modelBack = q('.hero__model-back')
       const modelSide = q('.hero__model-side')
       const modelFront = q('.hero__model-front')
       const cta = q('.hero__cta')
-      const charV = q('.hero__char--v span')
-      const charI = q('.hero__char--i span')
-      const charZ = q('.hero__char--z span')
-      const charA1 = q('.hero__char--a1 span')
-      const charZh = q('.hero__char--zh span')
-      const charI2 = q('.hero__char--i2 span')
-      const charS = q('.hero__char--s span')
-      const charT = q('.hero__char--t span')
-      const titleRow = q('.hero__title-row')
+      const chars = [
+        q('.hero__char--v span'),
+        q('.hero__char--i span'),
+        q('.hero__char--z span'),
+        q('.hero__char--a1 span'),
+        q('.hero__char--zh span'),
+        q('.hero__char--i2 span'),
+        q('.hero__char--s span'),
+        q('.hero__char--t span')
+      ]
 
-      // Установка начального состояния
-      if (isValidElement(startDateContent)) gsap.set(startDateContent, { y: -50, autoAlpha: 0 })
-      if (isValidElement(formatContent)) gsap.set(formatContent, { y: -50, autoAlpha: 0 })
-      if (isValidElement(headlineWrapper)) gsap.set(headlineWrapper, { y: '0.5rem', autoAlpha: 0 })
+      const isValidElement = el => el && (el.length > 0 || el.nodeType === 1)
 
-      if (isValidElement(titleRow)) gsap.set(titleRow, { force3D: true })
-
-      // HEADER TEXT REVEAL SETUP
-      const headerTextInit = document.querySelector('.header .text--subtitle')
-      if (headerTextInit) {
-        gsap.set(headerTextInit, { yPercent: 100, autoAlpha: 0 })
-        // Добавим в интро
-      }
-      if (isValidElement(charV)) gsap.set(charV, { x: '2.7rem', autoAlpha: 0 })
-      if (isValidElement(charI)) gsap.set(charI, { x: '-2rem', autoAlpha: 0 })
-      if (isValidElement(charZ)) gsap.set(charZ, { x: '2.1rem', autoAlpha: 0 })
-      if (isValidElement(charA1)) gsap.set(charA1, { x: '-1.2rem', autoAlpha: 0 })
-      if (isValidElement(charZh)) gsap.set(charZh, { x: '-3.2rem', autoAlpha: 0 })
-      if (isValidElement(charI2)) gsap.set(charI2, { x: '-2rem', autoAlpha: 0 })
-      if (isValidElement(charS)) gsap.set(charS, { x: '4.3rem', autoAlpha: 0 })
-      if (isValidElement(charT)) gsap.set(charT, { x: '1.9rem', autoAlpha: 0 })
-
-      if (isValidElement(titleLeftWrapper)) gsap.set(titleLeftWrapper, { x: -50, autoAlpha: 0 })
-      if (isValidElement(titleRightWrapper)) gsap.set(titleRightWrapper, { x: 50, autoAlpha: 0 })
-      if (isValidElement(mentorshipWords)) gsap.set(mentorshipWords, { y: '110%', autoAlpha: 0 })
-      if (isValidElement(signature)) gsap.set(signature, { autoAlpha: 1, y: 0 })
-      if (isValidElement(earningsWords)) gsap.set(earningsWords, { y: '110%', autoAlpha: 0 })
-
-      if (isValidElement(modelBack))
-        gsap.set(modelBack, {
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-          autoAlpha: 1,
-          left: '20%',
-          xPercent: -50
-        })
-      if (isValidElement(modelSide))
-        gsap.set(modelSide, { left: '35%', xPercent: -50, autoAlpha: 0 })
-      if (isValidElement(modelFront))
-        gsap.set(modelFront, { left: '50%', xPercent: -50, autoAlpha: 0 })
-
-      if (isValidElement(cta)) {
-        gsap.set(cta, { scale: 0.8, y: 20, autoAlpha: 0 })
-      }
-
-      // 1. Intro Timeline (Auto-play)
-      introTl = gsap.timeline({
-        onComplete: () => {
-          // Гарантируем корректный стейт после завершения авто-анимации
-          gsap.set(
-            [startDateContent, formatContent, headlineWrapper, titleLeftWrapper, titleRightWrapper],
-            { clearProps: 'transform' }
-          )
-        }
-      })
+      // --- Intro Timeline (Entrance) ---
+      introTl = gsap.timeline({ paused: true })
       introTl.addLabel('start', 0)
 
-      // Сразу показываем фоновые элементы если они есть
-      const bg = q('.hero__background')
-      if (isValidElement(bg)) gsap.set(bg, { autoAlpha: 1 })
-
       if (isValidElement(modelBack)) {
-        introTl.to(
+        introTl.fromTo(
           modelBack,
+          { clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)', autoAlpha: 1 },
           {
             clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
             duration: 1.2,
@@ -137,219 +96,157 @@ export function useHeroAnimation(containerRef) {
         )
       }
 
-      const headerTextEl = document.querySelector('.header .text--subtitle')
-      if (headerTextEl) {
-        introTl.to(
-          headerTextEl,
-          { yPercent: 0, autoAlpha: 1, duration: 1, ease: cgEase },
-          'start+=0.2'
-        )
-      }
-      if (isValidElement(startDateContent)) {
-        introTl.to(
-          startDateContent,
-          { y: 0, autoAlpha: 1, duration: 1.0, ease: cgEase },
-          'start+=0.3'
-        )
-      }
-      if (isValidElement(formatContent)) {
-        introTl.to(formatContent, { y: 0, autoAlpha: 1, duration: 1.0, ease: cgEase }, 'start+=0.4')
-      }
-      introTl.addLabel('left_side', 0.8)
-      if (isValidElement(titleLeftWrapper)) {
-        introTl.to(
-          titleLeftWrapper,
-          { x: 0, autoAlpha: 1, duration: 1.0, ease: cgEase },
-          'left_side'
-        )
-      }
-      if (isValidElement(mentorshipWords) && mentorshipWords.length) {
-        introTl.to(
-          mentorshipWords,
-          { y: '0%', autoAlpha: 1, duration: 0.8, stagger: 0.03, ease: cgEase },
-          'left_side+=0.2'
-        )
-      }
+      introTl.fromTo(
+        [startDateContent, formatContent],
+        { y: 30, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 1.0, stagger: 0.1, ease: cgEase },
+        'start+=0.2'
+      )
+
+      introTl.addLabel('left_side', 0.6)
+      introTl.fromTo(
+        [titleLeftWrapper, mentorshipWords],
+        { x: -30, autoAlpha: 0 },
+        { x: 0, autoAlpha: 1, duration: 1.0, stagger: 0.1, ease: cgEase },
+        'left_side'
+      )
+
       const signaturePaths = q('.hero__signature path')
-      if (signaturePaths && signaturePaths.length) {
+      if (signaturePaths.length) {
         signaturePaths.forEach(path => {
-          if (path.getTotalLength) {
-            const len = path.getTotalLength()
-            gsap.set(path, { strokeDasharray: len, strokeDashoffset: len })
-          }
+          const len = path.getTotalLength?.() || 1000
+          gsap.set(path, { strokeDasharray: len, strokeDashoffset: len })
         })
         introTl.to(
           signaturePaths,
-          { strokeDashoffset: 0, duration: 7.5, ease: 'power1.inOut' },
-          'left_side+=0.6'
-        )
-      }
-      introTl.addLabel('swap_1_2', 2.0)
-      if (isValidElement(modelBack)) {
-        introTl.to(
-          modelBack,
-          { x: '+=50', autoAlpha: 0, duration: 1.0, ease: 'power2.inOut' },
-          'swap_1_2'
-        )
-      }
-      if (isValidElement(modelSide)) {
-        introTl.fromTo(
-          modelSide,
-          { x: -50, autoAlpha: 0 },
-          { x: 0, autoAlpha: 1, duration: 1.0, ease: 'power2.inOut' },
-          'swap_1_2'
+          { strokeDashoffset: 0, duration: 3.5, ease: 'power1.inOut' },
+          'left_side+=0.3'
         )
       }
 
-      // Показываем Headline
-      if (isValidElement(headlineWrapper)) {
-        introTl.to(headlineWrapper, { y: 0, autoAlpha: 1, duration: 1, ease: cgEase }, 'swap_1_2')
-      }
+      introTl.addLabel('swap', 1.8)
+      introTl.to(modelBack, { x: 50, autoAlpha: 0, duration: 0.8 }, 'swap')
+      introTl.fromTo(
+        modelSide,
+        { x: -50, autoAlpha: 0, visibility: 'visible' },
+        { x: 0, autoAlpha: 1, duration: 0.8 },
+        'swap'
+      )
 
-      // АНИМАЦИЯ ТЕГОВ (Start Date, Format)
-      if (isValidElement(startDateContent)) {
-        introTl.to(
-          startDateContent,
-          { y: 0, autoAlpha: 1, duration: 1, ease: cgEase },
-          'start+=0.3'
-        )
-      }
-      if (isValidElement(formatContent)) {
-        introTl.to(formatContent, { y: 0, autoAlpha: 1, duration: 1, ease: cgEase }, 'start+=0.4')
-      }
-      introTl.addLabel('headline', 'swap_1_2+=0.3')
-      if (isValidElement(headlineWrapper)) {
-        introTl.to(
-          headlineWrapper,
-          { y: '0rem', autoAlpha: 1, duration: 1.33, ease: cgEase },
-          'headline'
-        )
-      }
-      const charsTimeline = gsap.timeline()
-      const chars = [charV, charZ, charA1, charZh, charI, charI2, charS, charT]
+      introTl.addLabel('final_model', 'swap+=1.0')
+      introTl.to(modelSide, { autoAlpha: 0, duration: 0.5 }, 'final_model')
+      introTl.fromTo(
+        modelFront,
+        { autoAlpha: 0, visibility: 'visible', scale: 1.1 },
+        { autoAlpha: 1, scale: 1, duration: 0.8, ease: 'power2.out' },
+        'final_model'
+      )
+
+      introTl.addLabel('headline', 'swap+=0.2')
+      introTl.fromTo(
+        headlineWrapper,
+        { y: 20, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 1 },
+        'headline'
+      )
+
       chars.forEach((char, i) => {
         if (isValidElement(char)) {
-          charsTimeline.to(char, { x: '0rem', autoAlpha: 1, duration: 3.0, ease: cgEase }, i * 0.05)
+          introTl.fromTo(
+            char,
+            { x: i % 2 === 0 ? '1rem' : '-1rem', autoAlpha: 0 },
+            { x: '0rem', autoAlpha: 1, duration: 1.5, ease: cgEase },
+            `headline+=${i * 0.03}`
+          )
         }
       })
-      introTl.add(charsTimeline, 'headline')
-      introTl.addLabel('right_side', 'headline+=0.5')
-      if (isValidElement(titleRightWrapper)) {
-        introTl.to(
-          titleRightWrapper,
-          { x: 0, autoAlpha: 1, duration: 1.0, ease: cgEase },
-          'right_side'
-        )
-      }
-      if (isValidElement(earningsWords) && earningsWords.length) {
-        introTl.to(
-          earningsWords,
-          { y: '0%', autoAlpha: 1, duration: 0.8, stagger: 0.03, ease: cgEase },
-          'right_side+=0.2'
-        )
-      }
-      introTl.addLabel('swap_2_3', 'right_side+=1.9')
-      if (isValidElement(modelSide)) {
-        introTl.to(
-          modelSide,
-          { x: '+=50', autoAlpha: 0, duration: 1.0, ease: 'power2.inOut' },
-          'swap_2_3'
-        )
-      }
-      if (isValidElement(modelFront)) {
-        introTl.fromTo(
-          modelFront,
-          { x: -50, autoAlpha: 0 },
-          { x: 0, autoAlpha: 1, duration: 1.0, ease: 'power2.inOut' },
-          'swap_2_3'
-        )
-      }
-      introTl.addLabel('cta', 'swap_2_3+=0.5')
-      if (isValidElement(cta)) {
-        introTl.to(
-          cta,
-          { scale: 1, autoAlpha: 1, y: '0rem', duration: 1.0, ease: 'elastic.out(1, 0.5)' },
-          'cta'
-        )
-      }
 
-      // 2. Portal Timeline (Scrubbed zoom)
-      portalTl = gsap.timeline()
-      if (isValidElement(titleRow)) {
-        portalTl.to(
-          titleRow,
-          {
-            scale: 80,
-            transformOrigin: '50% 55%',
-            ease: 'power2.inOut',
-            duration: 1,
-            force3D: true,
-            immediateRender: false,
-            // Добавляем специфический фикс для рендеринга при реверсе
-            onReverseComplete: () => {
-              gsap.set(titleRow, { scale: 1, clearProps: 'transform' })
-            }
-          },
-          0
-        )
-      }
-
-      const elementsToFade = [
-        q('.hero__background'),
-        q('.hero__model'),
-        q('.hero__tags'),
-        q('.hero__title-left'),
-        q('.hero__title-right'),
-        q('.hero__headline-top-wrapper'),
-        cta
-      ].filter(el => isValidElement(el))
-
-      if (elementsToFade.length > 0) {
-        portalTl.to(
-          elementsToFade,
-          {
-            autoAlpha: 0,
-            duration: 0.6, // Медленнее, чтобы не было "бликов"
-            immediateRender: false,
-            overwrite: 'auto' // Предотвращение конфликтов с intro
-          },
-          0
-        )
-      }
-
-      // Убираем секцию целиком только в самом конце зума
-      portalTl.to(
-        containerRef.value,
-        {
-          autoAlpha: 0,
-          duration: 0.3,
-          immediateRender: false,
-          onComplete: () => {
-            if (containerRef.value)
-              gsap.set(containerRef.value, { pointerEvents: 'none', visibility: 'hidden' })
-          },
-          onReverseComplete: () => {
-            if (containerRef.value) {
-              gsap.set(containerRef.value, {
-                pointerEvents: 'auto',
-                visibility: 'visible',
-                opacity: 1
-              })
-              // Глубокий сброс при реверсе для устранения фантомных букв
-              const tr = containerRef.value.querySelector('.hero__title-row')
-              if (tr) {
-                gsap.set(tr, { scale: 1, clearProps: 'all', force3D: true })
-                const spans = tr.querySelectorAll('span')
-                gsap.set(spans, { clearProps: 'all', opacity: 1 })
-              }
-            }
-          }
-        },
-        0.7 // Даем время на нахлест с About
+      introTl.addLabel('right_side', 'headline+=0.4')
+      introTl.fromTo(
+        [titleRightWrapper, earningsWords],
+        { x: 30, autoAlpha: 0 },
+        { x: 0, autoAlpha: 1, duration: 1.0, stagger: 0.1, ease: cgEase },
+        'right_side'
       )
-    }, containerRef.value)
 
-    return { introTl, portalTl }
+      introTl.addLabel('cta', 'right_side+=0.4')
+      introTl.fromTo(
+        cta,
+        { scale: 0.8, autoAlpha: 0, y: 20 },
+        { scale: 1, autoAlpha: 1, y: 0, duration: 0.8, ease: 'back.out(1.7)' },
+        'cta'
+      )
+    })
+
+    return {
+      introTl
+    }
+  }
+
+  /**
+   * Инжекция анимации портала Hero в мастер-таймлайн.
+   * Это делает анимацию частью глобального потока скролла.
+   */
+  const injectHeroPortal = (masterTl, label) => {
+    if (!containerRef.value) return
+    const q = gsap.utils.selector(containerRef.value)
+    const container = containerRef.value
+    const titleRowEl = q('.hero__title-row')
+    const cta = q('.hero__cta')
+
+    const elementsToFade = [
+      q('.hero__background'),
+      q('.hero__model-container'),
+      q('.hero__tags'),
+      q('.hero__title-left'),
+      q('.hero__title-right'),
+      q('.hero__headline-top-wrapper'),
+      cta
+    ].filter(el => el && (el.length > 0 || el.nodeType === 1))
+
+    // 1. Зум заголовка
+    masterTl.fromTo(
+      titleRowEl,
+      { scale: 1, autoAlpha: 1, z: 0.1 },
+      {
+        scale: 30, // Безопасный зум для GPU
+        transformOrigin: '50% 55%',
+        ease: 'power2.in',
+        duration: 1,
+        immediateRender: false
+      },
+      label
+    )
+
+    // 2. Исчезновение остальных элементов
+    masterTl.fromTo(
+      elementsToFade,
+      { autoAlpha: 1 },
+      {
+        autoAlpha: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        immediateRender: false,
+        ease: 'none'
+      },
+      label
+    )
+
+    // 3. Полное скрытие Hero в конце портала
+    masterTl.fromTo(
+      container,
+      { autoAlpha: 1, visibility: 'visible' },
+      {
+        autoAlpha: 0,
+        duration: 0.4,
+        ease: 'none',
+        immediateRender: false,
+        onComplete: () => gsap.set(container, { visibility: 'hidden', pointerEvents: 'none' }),
+        onReverseComplete: () =>
+          gsap.set(container, { visibility: 'visible', pointerEvents: 'auto' })
+      },
+      `${label}+=0.6`
+    )
   }
 
   onUnmounted(() => {
@@ -357,6 +254,7 @@ export function useHeroAnimation(containerRef) {
   })
 
   return {
-    initAnimation
+    initAnimation,
+    injectHeroPortal
   }
 }

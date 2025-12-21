@@ -8,21 +8,45 @@
   justify-content: center;
   overflow: hidden;
   padding-top: $spacing-10;
+  background-color: $color-neutral-black; // Фон для мгновенной отрисовки
+  transform-style: preserve-3d;
+  perspective: 1000px;
 
-  // КРИТИЧНО: Прячем анимируемые элементы на уровне CSS, чтобы избежать FOUC
-  // (Flash of Unstyled Content) до инициализации GSAP
+  // Базово элементы видимы, прячем только те, что анимируются "из пустоты"
   &__tag-content,
   &__headline-top-wrapper,
   &__duration-wrapper,
   &__level-wrapper,
-  &__cta,
-  &__model-image {
+  &__cta {
     opacity: 0;
     visibility: hidden;
+    will-change: transform, opacity;
+  }
+
+  &__background,
+  &__model-image {
+    opacity: 1;
+    visibility: visible;
+    will-change: transform, opacity;
   }
 
   &__title-char-container span {
     opacity: 0;
+    will-change: transform, opacity;
+    display: inline-block;
+    backface-visibility: hidden;
+  }
+
+  &__title-row {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  &__model-container {
+    will-change: transform, opacity;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
   }
 
   @include mobile {
@@ -238,7 +262,6 @@
   width: 100%;
   height: auto;
   object-fit: contain;
-  visibility: hidden;
   @include image-drop-shadow;
 }
 
@@ -249,6 +272,8 @@
   transform: translate(-50%, -50%);
   z-index: 1;
   white-space: nowrap;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
 .hero__title-row {
@@ -261,6 +286,8 @@
   -webkit-background-clip: unset;
   background-clip: unset;
   font-family: Helvetica;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero__title-char-container {
@@ -272,10 +299,12 @@
 .hero__title-char-container span {
   display: inline-block;
   transform: translate3d(0, 0, 0);
-  will-change: transform, opacity; // GPU-фикс мерцания
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
   font-size: $font-size-hero;
   line-height: $line-height-tight;
-  letter-spacing: 0.03em; // Tightened to allow larger font size
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: $color-neutral-white;
   opacity: 0.9;

@@ -1,22 +1,16 @@
 import { gsap } from 'gsap'
 import { onUnmounted } from 'vue'
 
+import { CustomEase } from '@shared/libs/gsap/CustomEase'
 import { SplitText } from '@shared/libs/gsap/SplitText'
 
-gsap.registerPlugin(SplitText)
+gsap.registerPlugin(SplitText, CustomEase)
 
 export function useAboutAnimation(aboutRef) {
   let ctx = null
 
-  const initAnimation = async () => {
+  const initAnimation = () => {
     if (!aboutRef.value) return null
-
-    if (document.fonts) {
-      await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 500))])
-    }
-
-    const { CustomEase } = await import('@shared/libs/gsap/CustomEase')
-    gsap.registerPlugin(CustomEase)
 
     let aboutTimeline = null
 
