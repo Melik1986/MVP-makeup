@@ -105,9 +105,15 @@ export function useHeroAnimation(containerRef) {
 
       introTl.addLabel('left_side', 0.6)
       introTl.fromTo(
-        [titleLeftWrapper, mentorshipWords],
-        { x: -30, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 1.0, stagger: 0.1, ease: cgEase },
+        [titleLeftWrapper, ...mentorshipWords],
+        { y: 20, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          stagger: 0.02,
+          ease: cgEase
+        },
         'left_side'
       )
 
@@ -115,12 +121,12 @@ export function useHeroAnimation(containerRef) {
       if (signaturePaths.length) {
         signaturePaths.forEach(path => {
           const len = path.getTotalLength?.() || 1000
-          gsap.set(path, { strokeDasharray: len, strokeDashoffset: len })
+          gsap.set(path, { strokeDasharray: len, strokeDashoffset: len, autoAlpha: 1 })
         })
         introTl.to(
           signaturePaths,
-          { strokeDashoffset: 0, duration: 3.5, ease: 'power1.inOut' },
-          'left_side+=0.3'
+          { strokeDashoffset: 0, duration: 2.5, ease: 'power1.inOut' },
+          'left_side+=0.2'
         )
       }
 
@@ -163,9 +169,15 @@ export function useHeroAnimation(containerRef) {
 
       introTl.addLabel('right_side', 'headline+=0.4')
       introTl.fromTo(
-        [titleRightWrapper, earningsWords],
-        { x: 30, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 1.0, stagger: 0.1, ease: cgEase },
+        [titleRightWrapper, ...earningsWords],
+        { y: 20, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          stagger: 0.02,
+          ease: cgEase
+        },
         'right_side'
       )
 
