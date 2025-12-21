@@ -1,11 +1,15 @@
 <template>
   <Section ref="sectionRef" padding="lg" background="white">
     <div class="audience-section">
-      <div class="audience-section__header">
-        <Heading :level="2" variant="section"> ДЛЯ КОГО ЭТОТ КУРС? </Heading>
-        <Text variant="subtitle" class="audience-section__subtitle">
-          Техники + продвижение + психология
-        </Text>
+      <div ref="headerRef" class="audience-section__header">
+        <div class="u-overflow-hidden">
+          <Heading :level="2" variant="section"> ДЛЯ КОГО ЭТОТ КУРС? </Heading>
+        </div>
+        <div class="u-overflow-hidden">
+          <Text variant="subtitle" class="audience-section__subtitle">
+            Техники + продвижение + психология
+          </Text>
+        </div>
       </div>
 
       <div class="audience-section__content">
@@ -49,7 +53,7 @@
         </div>
       </div>
 
-      <div class="audience-section__cta">
+      <div ref="ctaRef" class="audience-section__cta">
         <Button variant="primary" size="md" @click="emit('yes-click')"> Да, это про меня </Button>
         <Button variant="primary" size="lg" @click="emit('booking-click')">
           ЗАБРОНИРОВАТЬ МЕСТО
@@ -74,11 +78,13 @@ import { audienceCards } from './config/audience'
 const emit = defineEmits(['yes-click', 'booking-click'])
 
 const sectionRef = ref(null)
+const headerRef = ref(null)
 const decorLeftRef = ref(null)
 const decorRightRef = ref(null)
 const cardRefs = ref([])
+const ctaRef = ref(null)
 
-useAudienceAnimation(sectionRef, decorLeftRef, decorRightRef, cardRefs)
+useAudienceAnimation(sectionRef, headerRef, decorLeftRef, decorRightRef, cardRefs, ctaRef)
 </script>
 
 <style scoped lang="scss">

@@ -15,6 +15,10 @@
 // Pages
 @use 'pages/landing';
 
+.u-overflow-hidden {
+  overflow: hidden;
+}
+
 body {
   font-family: $font-family-primary;
   font-size: $font-size-base;

@@ -151,6 +151,7 @@
   max-width: 150px;
   height: auto;
   filter: drop-shadow($shadow-floating-object);
+  will-change: transform;
 
   @include tablet {
     max-width: 112px;
