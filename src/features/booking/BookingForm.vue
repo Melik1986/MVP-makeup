@@ -1,5 +1,5 @@
 <template>
-  <div class="booking-form-wrapper">
+  <div id="booking-form" class="booking-form-wrapper">
     <Section v-if="!hideTitle" padding="lg" background="gray">
       <div class="booking-form">
         <Heading :level="2" variant="section"> Забронируйте место на курсе </Heading>

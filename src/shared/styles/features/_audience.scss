@@ -197,4 +197,10 @@
   align-items: center;
   gap: $spacing-3;
   margin-top: $spacing-8;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+  }
 }

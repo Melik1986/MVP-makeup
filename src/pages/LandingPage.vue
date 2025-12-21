@@ -24,7 +24,7 @@
     <!-- Rest of the page in normal flow -->
     <ReviewsSection />
     <Divider />
-    <AudienceSection @yes-click="openBookingModal" @booking-click="openBookingModal" />
+    <AudienceSection />
     <BookingForm />
     <Footer />
 

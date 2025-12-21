@@ -54,10 +54,12 @@
       </div>
 
       <div ref="ctaRef" class="audience-section__cta">
-        <Button variant="primary" size="md" @click="emit('yes-click')"> Да, это про меня </Button>
-        <Button variant="primary" size="lg" @click="emit('booking-click')">
-          ЗАБРОНИРОВАТЬ МЕСТО
-        </Button>
+        <a href="#booking-form">
+          <Button variant="primary" size="md"> Да, это про меня </Button>
+        </a>
+        <a href="#booking-form">
+          <Button variant="primary" size="lg"> ЗАБРОНИРОВАТЬ МЕСТО </Button>
+        </a>
       </div>
     </div>
   </Section>
@@ -74,8 +76,6 @@ import Text from '@shared/ui/Text.vue'
 
 import { useAudienceAnimation } from './composables/useAudienceAnimation'
 import { audienceCards } from './config/audience'
-
-const emit = defineEmits(['yes-click', 'booking-click'])
 
 const sectionRef = ref(null)
 const headerRef = ref(null)

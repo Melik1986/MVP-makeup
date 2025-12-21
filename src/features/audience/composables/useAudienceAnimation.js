@@ -32,7 +32,12 @@ export function useAudienceAnimation(
         const titles = headerElement.querySelectorAll('h2, .text--subtitle')
 
         titles.forEach(title => {
-          const split = new SplitText(title, { type: 'lines,chars', linesClass: 'lineChild' })
+          // Используем autoSplit: true для автоматического пересчета при загрузке шрифтов
+          const split = new SplitText(title, {
+            type: 'lines,chars',
+            linesClass: 'lineChild',
+            autoSplit: true
+          })
 
           gsap.from(split.chars, {
             yPercent: 100,
