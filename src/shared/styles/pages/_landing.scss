@@ -49,6 +49,69 @@
   }
 }
 
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: $color-neutral-black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__content {
+    text-align: center;
+  }
+
+  &__logo {
+    color: $color-neutral-white;
+    font-size: $font-size-xl;
+    letter-spacing: 0.2em;
+    margin-bottom: $spacing-4;
+    font-weight: $font-weight-bold;
+    font-family: Helvetica, sans-serif;
+  }
+
+  &__line {
+    width: 200px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  &__progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: $color-primary-500;
+    transform: translateX(-100%);
+    animation: progress 2s infinite ease-in-out;
+  }
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.fade-leave-active {
+  transition: opacity 0.4s ease-in;
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
 .hero-transition-wrapper {
   position: relative;
   width: 100%;
