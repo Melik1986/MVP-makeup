@@ -3,7 +3,7 @@
     <Container>
       <div class="footer__content">
         <Text variant="small" class="footer__copyright">
-          © 2024 Курс визажа Ольги Павилиной. Все права защищены.
+          © 2025 Курс визажа Ольги Павилиной. Все права защищены.
         </Text>
       </div>
     </Container>
