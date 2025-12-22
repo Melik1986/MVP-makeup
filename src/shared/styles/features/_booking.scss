@@ -53,6 +53,10 @@
   flex-direction: column;
   gap: $spacing-4;
   position: relative;
+
+  @include mobile {
+    gap: $spacing-3;
+  }
 }
 
 .booking-form__field {
@@ -105,10 +109,9 @@
     color: $color-neutral-gray-200;
   }
 
-  // Для экранов до 480px убираем фиксированную ширину
-  @media (max-width: 480px) {
-    width: 100%;
-    max-width: 100%;
+  @include mobile {
+    padding: $spacing-2;
+    font-size: $font-size-sm;
   }
 }
 
@@ -119,6 +122,10 @@
 .booking-form__textarea {
   resize: vertical;
   min-height: 100px;
+
+  @include mobile {
+    min-height: 80px;
+  }
 }
 
 .booking-form__error {

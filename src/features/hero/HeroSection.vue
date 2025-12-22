@@ -12,7 +12,7 @@
           <div class="hero__tag hero__tag--start">
             <div class="hero__tag-content">
               <Text variant="subtitle">Старт обучения</Text>
-              <Text variant="body" tag="div" class="hero__tag-value">14 МАРТА</Text>
+              <Text variant="body" tag="div" class="hero__tag-value">24 ДЕКАБРЯ</Text>
             </div>
           </div>
           <div class="hero__tag hero__tag--format">

@@ -63,9 +63,14 @@ watch(
   bottom: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: $spacing-4;
+
+  @media (max-width: 767px) {
+    padding: 12px $spacing-2;
+    align-items: flex-end;
+  }
 }
 
 .modal__overlay {
@@ -89,6 +94,14 @@ watch(
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: $shadow-floating-object;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 767px) {
+    padding: $spacing-4;
+    max-height: calc(100svh - #{$spacing-4 * 2});
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+    margin-top: auto;
+  }
 }
 
 .modal__close {
