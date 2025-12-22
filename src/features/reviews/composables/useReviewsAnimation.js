@@ -24,9 +24,10 @@ export function useReviewsAnimation(sectionRef) {
 
     ctx = gsap.context(self => {
       const premiumEase = CustomEase.create('premium-ease', 'M0,0 C0.19,1 0.22,1 1,1')
+      const mm = gsap.matchMedia()
       const title = self.selector('.reviews__title')
 
-      // 1. Premium Title Reveal
+      // 1. Premium Title Reveal (Shared)
       if (title) {
         const splitTitle = new SplitText(title, { type: 'lines' })
         gsap.set(splitTitle.lines, { overflow: 'hidden' })
@@ -48,46 +49,68 @@ export function useReviewsAnimation(sectionRef) {
         )
       }
 
-      // 2. Mobile check (simple width check or matchMedia)
-      const isMobile = window.innerWidth <= 768
-      if (isMobile) return // Disable complex scroll animation on mobile
+      // 2. Desktop Animations (min-width: 768px)
+      mm.add('(min-width: 768px)', () => {
+        const columnsDown = self.selector('.reviews__column--down')
+        const columnUp = self.selector('.reviews__column--up')
 
-      const columnsDown = self.selector('.reviews__column--down')
-      const columnUp = self.selector('.reviews__column--up')
+        // Helper for element validation
+        const isValidElement = el => {
+          if (!el) return false
+          if (Array.isArray(el) || el instanceof NodeList) return el.length > 0
+          return el.nodeType === 1 // Element node
+        }
 
-      // Helper for element validation
-      const isValidElement = el => {
-        if (!el) return false
-        if (Array.isArray(el) || el instanceof NodeList) return el.length > 0
-        return el.nodeType === 1 // Element node
-      }
+        // Animation: Parallax / Marquee on Scroll
+        if (isValidElement(columnsDown)) {
+          gsap.to(columnsDown, {
+            yPercent: -20,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.value,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1
+            }
+          })
+        }
 
-      // Animation: Parallax / Marquee on Scroll
-      if (isValidElement(columnsDown)) {
-        gsap.to(columnsDown, {
-          yPercent: -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
-          }
+        if (isValidElement(columnUp)) {
+          gsap.to(columnUp, {
+            yPercent: 20,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.value,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1
+            }
+          })
+        }
+      })
+
+      // 3. Mobile Animations (max-width: 767px)
+      mm.add('(max-width: 767px)', () => {
+        const cards = self.selector('.reviews__card')
+
+        cards.forEach(card => {
+          gsap.fromTo(
+            card,
+            { y: 80, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: premiumEase,
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 92%',
+                toggleActions: 'play none none reverse'
+              }
+            }
+          )
         })
-      }
-
-      if (isValidElement(columnUp)) {
-        gsap.to(columnUp, {
-          yPercent: 20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
-          }
-        })
-      }
+      })
     }, sectionRef.value)
   })
 
