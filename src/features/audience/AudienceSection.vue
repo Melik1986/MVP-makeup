@@ -65,6 +65,7 @@
 import { ref } from 'vue'
 
 import AudienceCard from '@entities/audience/AudienceCard.vue'
+import { useMagnetic } from '@shared/composables/useMagnetic'
 import Button from '@shared/ui/Button.vue'
 import Heading from '@shared/ui/Heading.vue'
 import Section from '@shared/ui/Section.vue'
@@ -81,6 +82,7 @@ const cardRefs = ref([])
 const ctaRef = ref(null)
 
 useAudienceAnimation(sectionRef, headerRef, decorLeftRef, decorRightRef, cardRefs, ctaRef)
+useMagnetic(ctaRef)
 </script>
 
 <style scoped lang="scss">
