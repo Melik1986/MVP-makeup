@@ -41,7 +41,7 @@
               type="tel"
               class="booking-form__input"
               :class="{ 'booking-form__input--error': errors.phone }"
-              placeholder="+7 (999) 999-99-99"
+              placeholder="+380 (99) 999-99-99"
               required
             />
             <span v-if="errors.phone" class="booking-form__error">{{ errors.phone }}</span>
