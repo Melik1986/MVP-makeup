@@ -1,5 +1,5 @@
 <template>
-  <div id="booking-form" class="booking-form-wrapper">
+  <div id="booking-form" ref="sectionRef" class="booking-form-wrapper">
     <Section v-if="!hideTitle" padding="lg" background="gray">
       <div class="booking-form">
         <Heading :level="2" variant="section"> Забронируйте место на курсе </Heading>
@@ -98,6 +98,7 @@ import Button from '@shared/ui/Button.vue'
 import Heading from '@shared/ui/Heading.vue'
 import Section from '@shared/ui/Section.vue'
 
+import { useBookingAnimation } from './composables/useBookingAnimation'
 import { useBookingForm } from './composables/useBookingForm'
 
 const { hideTitle } = defineProps({
@@ -109,7 +110,10 @@ const { hideTitle } = defineProps({
 
 const { form, errors, isSubmitting, isSuccess, submitForm: handleSubmit } = useBookingForm()
 
+const sectionRef = ref(null)
 const decorCreamRef = ref(null)
+
+useBookingAnimation(sectionRef, decorCreamRef)
 </script>
 
 <style scoped lang="scss">

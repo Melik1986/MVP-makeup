@@ -1,15 +1,11 @@
 <template>
-  <Section ref="sectionRef" padding="lg" background="white">
-    <div class="audience-section">
+  <Section ref="sectionRef" padding="lg" background="white" class="audience-section">
+    <div class="audience-section__inner">
       <div ref="headerRef" class="audience-section__header">
-        <div class="u-overflow-hidden">
-          <Heading :level="2" variant="section"> ДЛЯ КОГО ЭТОТ КУРС? </Heading>
-        </div>
-        <div class="u-overflow-hidden">
-          <Text variant="subtitle" class="audience-section__subtitle">
-            Техники + продвижение + психология
-          </Text>
-        </div>
+        <Heading :level="2" variant="section"> ДЛЯ КОГО ЭТОТ КУРС? </Heading>
+        <Text variant="subtitle" class="audience-section__subtitle">
+          Техники + продвижение + психология
+        </Text>
       </div>
 
       <div class="audience-section__content">
