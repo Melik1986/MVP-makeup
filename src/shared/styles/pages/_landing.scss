@@ -31,11 +31,11 @@
   }
 
   .hero {
-    z-index: 30;
+    z-index: 60;
   }
 
   .courses {
-    z-index: 25; // Courses наезжает на About
+    z-index: 30; // Courses наезжает на About
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -47,6 +47,28 @@
     visibility: hidden;
     pointer-events: none;
   }
+}
+
+// Поток секций после мастер-контейнера
+.reviews,
+.audience-section,
+.booking-form-wrapper {
+  position: relative;
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+.audience-section {
+  z-index: 50;
+}
+
+.booking-form-wrapper {
+  z-index: 45;
+}
+
+.footer {
+  z-index: 10;
+  position: relative;
 }
 
 .preloader {

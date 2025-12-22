@@ -5,8 +5,12 @@ import { onMounted, onUnmounted } from 'vue'
 import { CustomEase } from '@shared/libs/gsap/CustomEase'
 import { SplitText } from '@shared/libs/gsap/SplitText'
 
-gsap.registerPlugin(ScrollTrigger, CustomEase, SplitText)
+gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase)
 
+/**
+ * Composable for Audience section animations (Normal Flow)
+ * Includes enhanced SplitText for all text and magnetic button effects.
+ */
 export function useAudienceAnimation(
   sectionRef,
   headerRef,
@@ -17,129 +21,175 @@ export function useAudienceAnimation(
 ) {
   let ctx
 
-  onMounted(() => {
-    if (typeof window === 'undefined') return
-    if (!sectionRef.value) return
+  onMounted(async () => {
+    if (typeof window === 'undefined' || !sectionRef.value) return
+
+    // Wait for fonts to ensure correct SplitText calculations
+    if (document.fonts) {
+      await document.fonts.ready
+    }
 
     const sectionElement = sectionRef.value?.$el || sectionRef.value
     const headerElement = headerRef.value
     const ctaElement = ctaRef.value
 
     ctx = gsap.context(() => {
-      // 1. Premium Typography (SplitText)
+      const premiumEase = CustomEase.create('premium-ease', 'M0,0 C0.19,1 0.22,1 1,1')
+
+      // 1. Header Reveal (SplitText)
       if (headerElement) {
-        const premiumEase = CustomEase.create('premium', 'M0,0 C0.19,1 0.22,1 1,1')
-        const titles = headerElement.querySelectorAll('h2, .text--subtitle')
+        const title = headerElement.querySelector('h2')
+        const subtitle = headerElement.querySelector('.audience-section__subtitle')
 
-        titles.forEach(title => {
-          // Используем autoSplit: true для автоматического пересчета при загрузке шрифтов
-          const split = new SplitText(title, {
-            type: 'lines,chars',
-            linesClass: 'lineChild',
-            autoSplit: true
-          })
+        const splitTitle = new SplitText(title, { type: 'lines' })
+        const splitSubtitle = new SplitText(subtitle, { type: 'lines' })
 
-          gsap.from(split.chars, {
-            yPercent: 100,
-            autoAlpha: 0,
-            rotateX: -20,
-            stagger: 0.02,
-            duration: 1,
-            ease: premiumEase,
+        gsap.set([splitTitle.lines, splitSubtitle.lines], { overflow: 'hidden' })
+
+        const headerTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: headerElement,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse'
+          }
+        })
+
+        headerTl.fromTo(
+          [splitTitle.lines, splitSubtitle.lines],
+          { yPercent: 100, autoAlpha: 0 },
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: premiumEase
+          }
+        )
+      }
+
+      // 2. Card Stagger with Internal Text SplitText
+      const cards = cardRefs.value.map(ref => ref?.$el || ref).filter(Boolean)
+
+      cards.forEach(card => {
+        const cardTitle = card.querySelector('.audience-card__title')
+        const cardDesc = card.querySelector('.audience-card__description')
+        const cardResult = card.querySelector('.audience-card__result')
+        const imageWrapper = card.querySelector('.audience-card__image-wrapper')
+
+        // Initial states
+        gsap.set(card, { autoAlpha: 0, y: 50 })
+        if (imageWrapper) gsap.set(imageWrapper, { scale: 0.8, autoAlpha: 0 })
+
+        const splitCardTitle = new SplitText(cardTitle, { type: 'lines' })
+        const splitCardDesc = new SplitText(cardDesc, { type: 'lines' })
+        const splitCardResult = new SplitText(cardResult, { type: 'lines' })
+
+        gsap.set([splitCardTitle.lines, splitCardDesc.lines, splitCardResult.lines], {
+          autoAlpha: 0,
+          y: 20
+        })
+
+        const cardTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        })
+
+        cardTl.to(card, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: premiumEase
+        })
+
+        if (imageWrapper) {
+          cardTl.to(
+            imageWrapper,
+            {
+              scale: 1,
+              autoAlpha: 1,
+              duration: 0.8,
+              ease: 'back.out(1.7)'
+            },
+            '-=0.4'
+          )
+        }
+
+        cardTl.to(
+          [splitCardTitle.lines, splitCardDesc.lines, splitCardResult.lines],
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: premiumEase
+          },
+          '-=0.4'
+        )
+      })
+
+      // 3. Decorative Parallax (Standalone Scrub)
+      if (decorLeftRef.value) {
+        gsap.fromTo(
+          decorLeftRef.value,
+          { y: 50, autoAlpha: 0, rotation: -10 },
+          {
+            y: -50,
+            autoAlpha: 1,
+            rotation: 10,
             scrollTrigger: {
-              trigger: title,
-              start: 'top 90%',
-              toggleActions: 'play none none none'
+              trigger: sectionElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1
             }
-          })
-        })
-      }
-
-      // 2. Orbital Parallax for decorative elements
-      if (decorLeftRef.value && sectionElement) {
-        gsap.to(decorLeftRef.value, {
-          yPercent: -30,
-          rotation: 15,
-          scale: 1.1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionElement,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-            refreshPriority: -1
           }
-        })
+        )
       }
 
-      if (decorRightRef.value && sectionElement) {
-        gsap.to(decorRightRef.value, {
-          yPercent: -20,
-          rotation: -15,
-          scale: 0.9,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionElement,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-            refreshPriority: -1
+      if (decorRightRef.value) {
+        gsap.fromTo(
+          decorRightRef.value,
+          { y: 100, autoAlpha: 0, rotation: 15 },
+          {
+            y: -100,
+            autoAlpha: 1,
+            rotation: -15,
+            scrollTrigger: {
+              trigger: sectionElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.5
+            }
           }
-        })
+        )
       }
 
-      // 3. Card Stagger Animation (Existing but refined)
-      if (cardRefs.value && cardRefs.value.length > 0) {
-        cardRefs.value.forEach((cardRef, index) => {
-          const element = cardRef?.$el || cardRef
-          if (element) {
-            gsap.fromTo(
-              element,
-              {
-                y: 60,
-                autoAlpha: 0,
-                scale: 0.95
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                scale: 1,
-                duration: 0.8,
-                delay: index * 0.1,
-                ease: 'power2.out',
-                scrollTrigger: {
-                  trigger: element,
-                  start: 'top 85%',
-                  toggleActions: 'play none none none',
-                  refreshPriority: -1
-                }
-              }
-            )
-          }
-        })
-      }
-
-      // 4. Magnetic CTA Interaction
+      // 4. CTA and Magnetic Effect
       if (ctaElement) {
         const buttons = ctaElement.querySelectorAll('button')
 
-        // Initial reveal
-        gsap.from(buttons, {
-          y: 30,
-          autoAlpha: 0,
-          scale: 0.8,
-          filter: 'blur(10px)',
-          stagger: 0.2,
-          duration: 1,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: ctaElement,
-            start: 'top 95%',
-            toggleActions: 'play none none none'
+        gsap.fromTo(
+          buttons,
+          { y: 30, autoAlpha: 0, scale: 0.9 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: 'back.out(1.7)',
+            scrollTrigger: {
+              trigger: ctaElement,
+              start: 'top 90%',
+              toggleActions: 'play none none reverse'
+            }
           }
-        })
+        )
 
-        // Magnetic effect
+        // Magnetic Effect logic
         buttons.forEach(btn => {
           const onMouseMove = e => {
             const rect = btn.getBoundingClientRect()
