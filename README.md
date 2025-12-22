@@ -1,121 +1,104 @@
-# MVP Kosmetic - Лендинг курса визажа
+# 💄 MVP Kosmetic — High-End Makeup Course Landing Page
 
-Лендинг-страница для продажи курса визажа с GSAP анимациями, созданный на Vue 3.
+<div align="center">
 
-## Технологии
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![GSAP](https://img.shields.io/badge/gsap-%2388CE02.svg?style=for-the-badge&logo=greensock&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)
+![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
 
-- **Bun** - JavaScript runtime и пакетный менеджер
-- **Vue 3** (Composition API, JavaScript)
-- **GSAP 3** для анимаций
-- **SCSS** для стилей
-- **Vite** для сборки
-- **Feature-Sliced Design** архитектура
+</div>
 
-## Установка и запуск
+Premium landing page for Olga Pavilina's makeup course. This project merges high-end aesthetics with complex kinetic typography and industry-standard performance optimizations.
 
-### Требования
+---
 
-- Bun 1.0+ ([Установка Bun](https://bun.sh/docs/installation))
+## 🌟 Key Features
 
-### Установка зависимостей
+- **Cinematic Experience**: Immersive entry animations and scroll-triggered effects powered by GSAP.
+- **Magnetic UX**: A reusable custom hook for magnetic interaction on CTA elements.
+- **Advanced Scroll**: Integration of Lenis for smooth, momentum-based navigation.
+- **Feature-Sliced Design (FSD)**: Scalable and maintainable architecture following the FSD methodology.
+- **Performance Optimized**: Optimized asset loading (LCP/CLS), modern image formats, and lazy loading strategies.
+- **Mobile-First**: Pixel-perfect responsiveness across all device categories.
+
+## 🛠 Tech Stack
+
+| Category       | Technology                                                                                     |
+| :------------- | :--------------------------------------------------------------------------------------------- |
+| **Framework**  | ![Vue.js](https://img.shields.io/badge/Vue_3-35495E?style=flat&logo=vuedotjs&logoColor=4FC08D) |
+| **Animation**  | ![GSAP](https://img.shields.io/badge/GSAP_3-88CE02?style=flat&logo=greensock&logoColor=white)  |
+| **Build Tool** | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)         |
+| **Runtime**    | ![Bun](https://img.shields.io/badge/Bun-000000?style=flat&logo=bun&logoColor=white)            |
+| **Styling**    | ![SASS](https://img.shields.io/badge/SCSS-CF649A?style=flat&logo=sass&logoColor=white)         |
+
+## 🏗 Architecture
+
+The project implements **Feature-Sliced Design (FSD)** to ensure clear separation of concerns:
+
+```text
+src/
+├── app/              # App initialization & global providers
+├── pages/            # Page-level compositions
+├── widgets/          # Complex cross-functional components (Header, Footer)
+├── features/         # Business-logic modules (hero-anim, booking-logic)
+├── entities/         # Domain-specific components (AudienceCard, Review)
+└── shared/           # Reusable UI, Composables (useMagnetic), Assets
+```
+
+## 📽 Animations & UX Patterns
+
+- **Kinetic Typography**: Character-by-character text reveals with elastic easing.
+- **useMagnetic Composable**: A custom Vue 3 hook that adds magnetic pull to buttons, enhancing interactivity.
+- **Parallax Decor**: Layered backgrounds and decorative elements that react to scroll velocity.
+- **Custom Preloader**: Unified loading experience with smooth transition to content.
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+Optimized for **Bun**. Install via: `curl -fsSL https://bun.sh/install | bash`
+
+### Installation
 
 ```bash
 bun install
 ```
 
-### Запуск dev-сервера
+### Development
 
 ```bash
 bun run dev
 ```
 
-Приложение будет доступно по адресу `http://localhost:5173`
+Access at: `http://localhost:5173`
 
-### Сборка для production
+### Production Build
 
 ```bash
 bun run build
-```
-
-### Превью production сборки
-
-```bash
+# Preview build:
 bun run preview
 ```
 
-### Дополнительные команды
+## 🎨 Design System
 
-```bash
-# Линтинг кода
-bun run lint
+- **Typography**:
+  - `Montserrat`: Primary body & UI
+  - `Playfair Display`: High-contrast headings
+  - `Great Vibes`: Accents and signature
+- **Color Palette**:
+  - `Primary`: #A81C26 (Imperial Red)
+  - `Secondary`: #1B3F2B (Deep Emerald)
+  - `Dark`: #1A0406 (Rich Black)
 
-# Форматирование кода
-bun run format
+## 📄 License
 
-# Проверка типов
-bun run type-check
-```
+Distributed under the MIT License. See `LICENSE` for more information.
 
-## Структура проекта
+---
 
-```
-src/
-├── app/              # Конфигурация приложения
-├── pages/            # Страницы
-├── widgets/          # Составные виджеты (Header, Footer)
-├── features/         # Фичи (hero, audience, booking)
-│   ├── hero/         # Hero секция с анимациями
-│   ├── audience/     # Секция целевой аудитории
-│   └── booking/      # Форма бронирования
-├── entities/         # Бизнес-сущности (AudienceCard)
-└── shared/           # Общие компоненты и стили
-    ├── ui/           # UI компоненты (Button, Container, etc.)
-    └── styles/       # Дизайн-система и стили
-```
-
-## Дизайн-система
-
-Дизайн-система находится в `src/shared/styles/design-system.scss` и основана на файле `.cursor/design-system.md`.
-
-### Основные цвета
-
-- Primary: `#A81C26` (красный)
-- Secondary: `#1B3F2B` (зеленый)
-- Background Hero: градиент от `#1a0406` до `#4a0e14`
-
-### Шрифты
-
-- Primary: Montserrat
-- Secondary: Playfair Display
-- Script: Great Vibes (для подписи)
-
-## Изображения
-
-Необходимые изображения для проекта:
-
-- `/public/model.jpg` - изображение модели для Hero секции
-- `/public/cosmetic-tube.png` - косметическая туба для декора
-- `/public/makeup-brush.png` - кисть для макияжа для декора
-- `/public/audience-1.jpg` до `/public/audience-4.jpg` - изображения для карточек аудитории
-
-**Важно**: Добавьте эти изображения в папку `public/` перед запуском.
-
-## Особенности
-
-- GSAP анимации появления элементов в Hero секции
-- Parallax эффекты для декоративных элементов
-- Адаптивный дизайн (mobile-first)
-- Форма бронирования с валидацией
-- Модальное окно для формы
-- ScrollTrigger анимации при скролле
-
-## Браузерная поддержка
-
-- Chrome (последние версии)
-- Firefox (последние версии)
-- Safari (последние версии)
-- Edge (последние версии)
-
-## Лицензия
-
-MIT
+<div align="center">
+  Developed with ❤️ for the Olga Pavilina Makeup Team
+</div>
