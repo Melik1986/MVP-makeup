@@ -90,7 +90,7 @@ export function useHeroAnimation(containerRef) {
           {
             clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
             duration: 1.2,
-            ease: 'power4.inOut'
+            ease: 'expo.inOut'
           },
           'start'
         )
@@ -125,7 +125,7 @@ export function useHeroAnimation(containerRef) {
         })
         introTl.to(
           signaturePaths,
-          { strokeDashoffset: 0, duration: 2.5, ease: 'power1.inOut' },
+          { strokeDashoffset: 0, duration: 2.5, ease: 'expo.inOut' },
           'left_side+=0.2'
         )
       }
@@ -144,7 +144,7 @@ export function useHeroAnimation(containerRef) {
       introTl.fromTo(
         modelFront,
         { autoAlpha: 0, visibility: 'visible', scale: 1.1 },
-        { autoAlpha: 1, scale: 1, duration: 0.8, ease: 'power2.out' },
+        { autoAlpha: 1, scale: 1, duration: 0.8, ease: 'expo.out' },
         'final_model'
       )
 
