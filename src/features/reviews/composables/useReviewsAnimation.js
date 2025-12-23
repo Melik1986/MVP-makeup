@@ -48,9 +48,26 @@ export function useReviewsAnimation(sectionRef) {
         )
       }
 
-      // 2. Mobile check (simple width check or matchMedia)
+      // 2. Card Appearance Animation (Stagger)
+      const cards = self.selector('.reviews__card')
+      if (cards && cards.length > 0) {
+        gsap.from(cards, {
+          y: 50,
+          autoAlpha: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: premiumEase,
+          scrollTrigger: {
+            trigger: cards[0], // Trigger by first card
+            start: 'top 90%',
+            toggleActions: 'play none none reverse'
+          }
+        })
+      }
+
+      // 3. Mobile check (simple width check or matchMedia)
       const isMobile = window.innerWidth <= 768
-      if (isMobile) return // Disable complex scroll animation on mobile
+      if (isMobile) return // Disable complex parallax scroll animation on mobile
 
       const columnsDown = self.selector('.reviews__column--down')
       const columnUp = self.selector('.reviews__column--up')

@@ -26,12 +26,14 @@
   height: 80vh; // Restrict height to create a "window"
   overflow: hidden;
   position: relative;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
   mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
 
   @include mobile {
     grid-template-columns: 1fr; // On mobile, maybe just one column or horizontal slider
     gap: $spacing-4;
     height: auto;
+    -webkit-mask-image: none;
     mask-image: none;
     overflow: visible;
   }
