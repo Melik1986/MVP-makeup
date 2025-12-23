@@ -15,6 +15,7 @@ export function useAboutAnimation(aboutRef) {
     let aboutTimeline = null
 
     ctx = gsap.context(self => {
+      const premiumEase = CustomEase.create('premium-ease', 'M0,0 C0.19,1 0.22,1 1,1')
       const title = self.selector('.about__title')[0]
       const paragraphs = self.selector('.about__paragraph')
       const listItems = self.selector('.about__list-item')
@@ -66,7 +67,7 @@ export function useAboutAnimation(aboutRef) {
             clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
             y: 0,
             duration: 1.2,
-            ease: 'power4.inOut'
+            ease: premiumEase
           },
           0
         )

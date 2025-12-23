@@ -1,6 +1,10 @@
 import { gsap } from 'gsap'
 import { onUnmounted } from 'vue'
 
+import { CustomEase } from '@shared/libs/gsap/CustomEase'
+
+gsap.registerPlugin(CustomEase)
+
 export function useCoursesAnimation(sectionRef) {
   let ctx = null
 
@@ -10,6 +14,7 @@ export function useCoursesAnimation(sectionRef) {
     let coursesTimeline = null
 
     ctx = gsap.context(self => {
+      const premiumEase = CustomEase.create('premium-ease', 'M0,0 C0.19,1 0.22,1 1,1')
       const stage = self.selector('.courses__stage')[0]
       const cards = self.selector('.courses__card')
       const progressFills = self.selector('.courses__progress-fill')
@@ -78,7 +83,7 @@ export function useCoursesAnimation(sectionRef) {
           y: 0,
           duration: 0.5,
           stagger: 0.02,
-          ease: 'power2.out'
+          ease: premiumEase
         },
         0
       )
@@ -103,7 +108,7 @@ export function useCoursesAnimation(sectionRef) {
             y: 0,
             duration: 0.8,
             stagger: 0.03,
-            ease: 'power2.out'
+            ease: premiumEase
           },
           startTime + 0.3
         )

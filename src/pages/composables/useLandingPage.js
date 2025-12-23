@@ -1,13 +1,19 @@
 import { gsap } from 'gsap'
 import { ref } from 'vue'
 
+import { CustomEase } from '@shared/libs/gsap/CustomEase'
+import { useLogger } from '@shared/libs/logger'
+
 import { useScrollCoordination } from './useScrollCoordination'
+
+gsap.registerPlugin(CustomEase)
 
 /**
  * Composable for Landing Page logic and animation orchestration
  * @returns {Object} Landing page states and methods
  */
 export function useLandingPage() {
+  const logger = useLogger()
   const isBookingModalOpen = ref(false)
   const isLoading = ref(true)
   const coordinator = useScrollCoordination()
@@ -27,6 +33,7 @@ export function useLandingPage() {
    */
   const initLandingAnimation = async (container, { heroSection, aboutSection, coursesSection }) => {
     let heroTls = null
+    const premiumEase = CustomEase.create('premium-ease', 'M0,0 C0.19,1 0.22,1 1,1')
 
     // 1. Initialize Master Timeline
     coordinator.initMasterTimeline(container, {
@@ -75,7 +82,7 @@ export function useLandingPage() {
           yPercent: -100,
           autoAlpha: 0,
           duration: 0.4,
-          ease: 'power2.out'
+          ease: 'expo.out'
         },
         'hero-start'
       )
@@ -94,7 +101,7 @@ export function useLandingPage() {
           pointerEvents: 'auto',
           visibility: 'visible',
           duration: 0.6,
-          ease: 'power2.out',
+          ease: premiumEase,
           immediateRender: false
         },
         'portal-open+=0.2'
@@ -110,7 +117,7 @@ export function useLandingPage() {
           yPercent: 0,
           pointerEvents: 'auto',
           duration: 0.7,
-          ease: 'power2.inOut',
+          ease: premiumEase,
           immediateRender: false
         },
         'courses-slide'
@@ -121,7 +128,7 @@ export function useLandingPage() {
 
       coordinator.synchronize()
     } catch (error) {
-      console.error('❌ Landing Init Error:', error)
+      logger.error('❌ Landing Init Error:', error)
       isLoading.value = false
     }
   }

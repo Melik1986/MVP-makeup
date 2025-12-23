@@ -200,7 +200,7 @@ export function useAudienceAnimation(
               x: x * 0.3,
               y: y * 0.3,
               duration: 0.4,
-              ease: 'power2.out'
+              ease: 'expo.out'
             })
           }
 
