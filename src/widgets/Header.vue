@@ -23,6 +23,7 @@ import Text from '@shared/ui/Text.vue'
   right: 0;
   z-index: 100;
   background: rgba(26, 4, 6, 0.8);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   padding: $spacing-2 0;
 }
