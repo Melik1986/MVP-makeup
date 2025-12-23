@@ -141,8 +141,8 @@
     height: 100%;
     min-height: 0;
     box-sizing: border-box;
-    justify-content: flex-start;
-    padding-bottom: calc(#{$spacing-4} + 72px + env(safe-area-inset-bottom));
+    justify-content: space-between; // Ensure tags are top and CTA is bottom
+    padding-bottom: calc(#{$spacing-6} + env(safe-area-inset-bottom));
   }
 }
 
@@ -160,9 +160,10 @@
 
   @include mobile {
     position: relative;
+    top: auto;
     flex-direction: column;
     gap: $spacing-2;
-    margin-bottom: 8px;
+    margin-bottom: $spacing-4;
   }
 }
 
@@ -447,15 +448,14 @@
   }
 
   @include mobile {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: calc(80px + env(safe-area-inset-bottom));
-    width: calc(100% - #{$spacing-4 * 2});
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
     max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0;
+    margin: auto auto 0 auto; // Push to bottom of flex container
+    padding-top: $spacing-6;
   }
 }
 

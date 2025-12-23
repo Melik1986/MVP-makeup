@@ -17,8 +17,9 @@ export function useSmoothScroll() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      smoothTouch: false, // Mobile usually better native, but can enable if needed
-      touchMultiplier: 2
+      smoothTouch: true, // Enable for consistent mobile experience
+      touchMultiplier: 1.5,
+      infinite: false
     })
 
     // Connect to ScrollTrigger
