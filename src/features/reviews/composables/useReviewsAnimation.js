@@ -51,8 +51,25 @@ export function useReviewsAnimation(sectionRef) {
 
       // 2. Desktop Animations (min-width: 768px)
       mm.add('(min-width: 768px)', () => {
+        const cards = self.selector('.reviews__card')
         const columnsDown = self.selector('.reviews__column--down')
         const columnUp = self.selector('.reviews__column--up')
+
+        // Card Entrance (Stagger)
+        if (cards && cards.length > 0) {
+          gsap.from(cards, {
+            y: 50,
+            autoAlpha: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: premiumEase,
+            scrollTrigger: {
+              trigger: cards[0],
+              start: 'top 90%',
+              toggleActions: 'play none none reverse'
+            }
+          })
+        }
 
         // Helper for element validation
         const isValidElement = el => {

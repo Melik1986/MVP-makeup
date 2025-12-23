@@ -21,7 +21,7 @@
         </div>
 
         <!-- Column 2: Moves Up (Center) -->
-        <div class="reviews__column reviews__column--up">
+        <div v-if="!isMobile" class="reviews__column reviews__column--up">
           <div v-for="(review, index) in column2" :key="`col2-${index}`" class="reviews__card">
             <div class="reviews__card-header">
               <div class="reviews__avatar">
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Column 3: Moves Down -->
-        <div class="reviews__column reviews__column--down">
+        <div v-if="!isMobile" class="reviews__column reviews__column--down">
           <div v-for="(review, index) in column3" :key="`col3-${index}`" class="reviews__card">
             <div class="reviews__card-header">
               <div class="reviews__avatar">
@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 import Container from '@shared/ui/Container.vue'
 import Heading from '@shared/ui/Heading.vue'
@@ -66,6 +66,20 @@ import Text from '@shared/ui/Text.vue'
 import { useReviewsAnimation } from './composables/useReviewsAnimation'
 
 const reviewsRef = ref(null)
+const isMobile = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 // Mock data split into 3 columns
 const column1 = [
