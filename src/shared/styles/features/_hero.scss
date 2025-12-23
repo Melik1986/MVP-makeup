@@ -450,7 +450,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: calc(130px + env(safe-area-inset-bottom));
+    bottom: calc(100px + env(safe-area-inset-bottom));
     width: calc(100% - #{$spacing-4 * 2});
     max-width: 420px;
     margin-left: auto;
