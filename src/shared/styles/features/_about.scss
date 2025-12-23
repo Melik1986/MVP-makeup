@@ -2,7 +2,7 @@
 
 .about {
   position: relative;
-  min-height: 100vh;
+  min-height: 100dvh;
   @include section-spacing;
   background-color: $color-neutral-white;
   overflow: hidden;
