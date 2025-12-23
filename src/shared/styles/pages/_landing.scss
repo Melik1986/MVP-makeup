@@ -4,6 +4,7 @@
   min-height: 100dvh;
   position: relative;
   overflow-x: hidden;
+  overscroll-behavior-y: none; // Prevent pull-to-refresh jitter
 }
 
 // Контейнер для Master Timeline (Single Canvas)
