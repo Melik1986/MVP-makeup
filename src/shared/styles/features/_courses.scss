@@ -149,9 +149,9 @@
 
   @include mobile {
     width: calc(100% - 32px); // Fixed width independent of padding
-    height: min(80vh, 670px); // Adjusted for border-box
+    height: min(80vh, 640px); // Adjusted for border-box
     padding: 22px; // Reduced padding as requested for better content fit
-    padding-bottom: calc(#{$spacing-6} + 30px);
+    padding-bottom: calc(#{$spacing-6} + 10px);
     border-radius: $border-radius-md;
   }
 }

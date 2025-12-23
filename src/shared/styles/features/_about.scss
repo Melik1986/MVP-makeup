@@ -10,7 +10,7 @@
   padding-top: 20px;
 
   @include mobile {
-    min-height: auto;
+    height: auto;
     overflow: visible;
     padding-top: 68px;
   }
@@ -34,7 +34,7 @@
   @include mobile {
     grid-template-columns: 1fr;
     height: auto;
-    gap: 32px;
+    gap: 3px;
   }
 }
 

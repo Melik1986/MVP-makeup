@@ -10,18 +10,11 @@ gsap.registerPlugin(ScrollTrigger)
 // Global GSAP & ScrollTrigger Configuration for Mobile Stability
 ScrollTrigger.config({
   ignoreMobileResize: true, // Prevent intrusive refreshes on address bar toggle
-  limitCallbacks: true
+  limitCallbacks: true,
+  autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load' // Limit refresh events
 })
 
-// Normalize scroll for touch devices to eliminate jitter/backlash
-if (ScrollTrigger.isTouch) {
-  ScrollTrigger.normalizeScroll({
-    allowNestedScroll: true,
-    momentum: false // Purely scroll-driven
-  })
-}
-
-// Global refresh on load to ensure ScrollTrigger calculates positions correctly
+// Scroll normalization is handled by Lenis now, but we keep basic config
 if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
     ScrollTrigger.refresh(true)
