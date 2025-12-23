@@ -12,7 +12,7 @@
           <div class="hero__tag hero__tag--start">
             <div class="hero__tag-content">
               <Text variant="subtitle">Старт обучения</Text>
-              <Text variant="body" tag="div" class="hero__tag-value">14 МАРТА</Text>
+              <Text variant="body" tag="div" class="hero__tag-value">24 ДЕКАБРЯ</Text>
             </div>
           </div>
           <div class="hero__tag hero__tag--format">
@@ -125,7 +125,7 @@
         </div>
 
         <!-- CTA Button -->
-        <div class="hero__cta">
+        <div ref="ctaRef" class="hero__cta">
           <Button variant="primary" size="lg" @click="handleBookingClick">
             ЗАБРОНИРОВАТЬ МЕСТО
           </Button>
@@ -139,6 +139,7 @@
 import { nextTick, onMounted, ref } from 'vue'
 
 import signatureSvg from '@shared/assets/icons/Olga_Pavilina.svg?raw'
+import { useMagnetic } from '@shared/composables/useMagnetic'
 import TextReveal from '@shared/ui/animation/TextReveal.vue'
 import Button from '@shared/ui/Button.vue'
 import Container from '@shared/ui/Container.vue'
@@ -148,7 +149,10 @@ import Text from '@shared/ui/Text.vue'
 import { useHeroAnimation } from './composables/useHeroAnimation'
 
 const heroRef = ref(null)
+const ctaRef = ref(null)
 const { initAnimation, injectHeroPortal } = useHeroAnimation(heroRef)
+
+useMagnetic(ctaRef)
 
 const emit = defineEmits(['booking-click'])
 

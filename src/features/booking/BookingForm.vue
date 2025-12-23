@@ -41,7 +41,7 @@
               type="tel"
               class="booking-form__input"
               :class="{ 'booking-form__input--error': errors.phone }"
-              placeholder="+7 (999) 999-99-99"
+              placeholder="+380 (99) 999-99-99"
               required
             />
             <span v-if="errors.phone" class="booking-form__error">{{ errors.phone }}</span>
@@ -72,15 +72,17 @@
             ></textarea>
           </div>
 
-          <Button
-            variant="primary"
-            size="lg"
-            type="submit"
-            :disabled="isSubmitting"
-            class="booking-form__submit"
-          >
-            {{ isSubmitting ? 'Отправка...' : 'Отправить заявку' }}
-          </Button>
+          <div ref="submitRef">
+            <Button
+              variant="primary"
+              size="lg"
+              type="submit"
+              :disabled="isSubmitting"
+              class="booking-form__submit"
+            >
+              {{ isSubmitting ? 'Отправка...' : 'Отправить заявку' }}
+            </Button>
+          </div>
 
           <div v-if="isSuccess" class="booking-form__success">
             Спасибо! Ваша заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.
@@ -94,6 +96,7 @@
 <script setup>
 import { ref } from 'vue'
 
+import { useMagnetic } from '@shared/composables/useMagnetic'
 import Button from '@shared/ui/Button.vue'
 import Heading from '@shared/ui/Heading.vue'
 import Section from '@shared/ui/Section.vue'
@@ -112,8 +115,10 @@ const { form, errors, isSubmitting, isSuccess, submitForm: handleSubmit } = useB
 
 const sectionRef = ref(null)
 const decorCreamRef = ref(null)
+const submitRef = ref(null)
 
 useBookingAnimation(sectionRef, decorCreamRef)
+useMagnetic(submitRef)
 </script>
 
 <style scoped lang="scss">

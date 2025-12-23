@@ -202,5 +202,10 @@
     text-decoration: none;
     color: inherit;
     display: inline-block;
+    outline: none;
+
+    &:focus {
+      outline: none;
+    }
   }
 }

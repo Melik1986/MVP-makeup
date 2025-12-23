@@ -63,7 +63,7 @@
   @include mobile {
     padding: 0; // Remove horizontal padding to allow 100% width
     padding-top: calc(#{$spacing-4} + 20px + env(safe-area-inset-top));
-    gap: 2px;
+    gap: 10px;
   }
 }
 

@@ -18,6 +18,7 @@ bun.lockb
 .vscode/*
 !.vscode/extensions.json
 .cursor/*
+.trae/*
 .idea
 .DS_Store
 *.suo

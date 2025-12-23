@@ -7,10 +7,12 @@
   background-color: $color-neutral-white;
   overflow: hidden;
   z-index: 1; // Lower than Hero initially if we want Hero to cover it
+  padding-top: 20px;
 
   @include mobile {
     min-height: auto;
     overflow: visible;
+    padding-top: 68px;
   }
 }
 
@@ -87,10 +89,10 @@
 .about__text-wrapper {
   display: flex;
   flex-direction: column;
-  gap: $spacing-6;
+  gap: 4px;
 
   @include mobile {
-    gap: $spacing-3;
+    gap: 2px;
   }
 }
 
