@@ -29,7 +29,6 @@ export function createScrollCoordinator() {
     }
 
     const {
-      start = 'top top',
       end = '+=8000', // Общая длина "полотна" в пикселях
       pin = true,
       scrub = 1.5, // Сделаем скролл более "тягучим" для премиальности
@@ -41,12 +40,13 @@ export function createScrollCoordinator() {
     masterScrollTrigger = ScrollTrigger.create({
       animation: masterTimeline,
       trigger: triggerElement,
-      start,
+      start: 'top top',
       end,
       pin,
       scrub,
       invalidateOnRefresh: true,
       anticipatePin: 1,
+      fastScrollEnd: true,
       ...rest
     })
 
