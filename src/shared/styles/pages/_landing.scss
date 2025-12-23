@@ -1,15 +1,16 @@
 @use '../design-system.scss' as *;
 
 .landing-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
+  overflow-x: hidden;
 }
 
 // Контейнер для Master Timeline (Single Canvas)
 .master-scroll-container {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background-color: $color-neutral-black;
   transform-style: preserve-3d;

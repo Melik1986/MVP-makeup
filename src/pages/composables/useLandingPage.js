@@ -1,5 +1,5 @@
 import { gsap } from 'gsap'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 import { CustomEase } from '@shared/libs/gsap/CustomEase'
 import { useLogger } from '@shared/libs/logger'
@@ -25,6 +25,27 @@ export function useLandingPage() {
   const closeBookingModal = () => {
     isBookingModalOpen.value = false
   }
+
+  /**
+   * Robust Refresh for Mobile (Address Bar fix)
+   */
+  const handleResize = () => {
+    // Only refresh on width changes or significant height changes
+    // to avoid jitter from address bar toggle
+    clearTimeout(window.refreshTimeout)
+    window.refreshTimeout = setTimeout(() => {
+      coordinator.synchronize()
+    }, 200)
+  }
+
+  onMounted(() => {
+    window.addEventListener('resize', handleResize)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+    clearTimeout(window.refreshTimeout)
+  })
 
   /**
    * Initializes the landing page animation sequence
